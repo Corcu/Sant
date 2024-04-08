@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
+<calypso:calypsoDocument xmlns:calypso="http://www.calypso.com/xml">
+    <calypso:calypsoObject xsi:type="calypso:Trade" version="14-0" action=""
+                           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <calypso:identification>
+            <calypso:versionedIdentifier version="1" code="@EXTERNAL_REFERENCE@" codifier="ExternalSystem"/>
+        </calypso:identification>
+        <calypso:auditInfo>
+            <calypso:enteredBy>calypso_user</calypso:enteredBy>
+            <calypso:dateEntered>2018-12-12T12:14:42.437+01:00</calypso:dateEntered>
+        </calypso:auditInfo>
+        <calypso:trader>stress32</calypso:trader>
+        <calypso:salesPerson>NONE</calypso:salesPerson>
+        <calypso:tradeParty>
+            <calypso:legalEntity>
+                <calypso:type>com.calypso.tk.core.LegalEntityAdapter</calypso:type>
+                <calypso:identifier code="@CPTY@" codifier="convention"/>
+                <calypso:role>CounterParty</calypso:role>
+            </calypso:legalEntity>
+            <calypso:role>CounterParty</calypso:role>
+            <calypso:feeParty>false</calypso:feeParty>
+        </calypso:tradeParty>
+        <calypso:tradeParty>
+            <calypso:book>
+                <calypso:type>com.calypso.tk.core.Book</calypso:type>
+                <calypso:identifier code="COL_MAD_DV" codifier="convention"/>
+                <calypso:calypsoBusinessKey>
+                    <calypso:propertyName>name</calypso:propertyName>
+                    <calypso:propertyValue>COL_MAD_DV</calypso:propertyValue>
+                </calypso:calypsoBusinessKey>
+            </calypso:book>
+            <calypso:role>Book</calypso:role>
+        </calypso:tradeParty>
+        <calypso:tradeAction>@ACTION@</calypso:tradeAction>
+        <calypso:tradeDate>2016-05-31T09:00:00+02:00</calypso:tradeDate>
+        <calypso:tradeCurrency>USD</calypso:tradeCurrency>
+        <calypso:settlementDate>2016-06-02</calypso:settlementDate>
+        <calypso:settlementCurrency>USD</calypso:settlementCurrency>
+        <calypso:internalReference>@EXTERNAL_REFERENCE@</calypso:internalReference>
+        <calypso:externalReference>@EXTERNAL_REFERENCE@</calypso:externalReference>
+        <calypso:keyword>
+            <calypso:name>CreationDate</calypso:name>
+            <calypso:value xsi:type="ns24:string" xmlns:ns24="http://www.w3.org/2001/XMLSchema">2016-05-31
+            </calypso:value>
+        </calypso:keyword>
+        <calypso:keyword>
+            <calypso:name>InternalTrade</calypso:name>
+            <calypso:value xsi:type="ns24:string" xmlns:ns24="http://www.w3.org/2001/XMLSchema">N</calypso:value>
+        </calypso:keyword>
+        <calypso:keyword>
+            <calypso:name>NegotiatedCurrency</calypso:name>
+            <calypso:value xsi:type="ns24:string" xmlns:ns24="http://www.w3.org/2001/XMLSchema">USD</calypso:value>
+        </calypso:keyword>
+        <calypso:product>
+            <calypso:definition xsi:type="calypso:Cash">
+                <calypso:secCode>
+                    <calypso:name>DiscountMethod</calypso:name>
+                    <calypso:value xsi:type="ns24:string" xmlns:ns24="http://www.w3.org/2001/XMLSchema">NONE
+                    </calypso:value>
+                </calypso:secCode>
+                <calypso:principal>
+                    <calypso:quantity>-1000000.0</calypso:quantity>
+                    <calypso:currency>USD</calypso:currency>
+                </calypso:principal>
+                <calypso:startDate>2016-06-02</calypso:startDate>
+                <calypso:endDate>2022-06-02</calypso:endDate>
+                <calypso:noticeDays>0</calypso:noticeDays>
+                <calypso:discount>false</calypso:discount>
+                <calypso:dayCount>ACT/360</calypso:dayCount>
+                <calypso:fixedRate>0.008</calypso:fixedRate>
+                <calypso:salesMargin>0.0</calypso:salesMargin>
+                <calypso:paymentFrequency>ZC</calypso:paymentFrequency>
+                <calypso:rollingDay>0</calypso:rollingDay>
+                <calypso:interestRule>ADJUSTED</calypso:interestRule>
+                <calypso:stubRule>NONE</calypso:stubRule>
+                <calypso:paymentDateAdjustment>
+                    <calypso:days>0</calypso:days>
+                    <calypso:business>false</calypso:business>
+                    <calypso:holidays>
+                        <calypso:type>com.calypso.tk.core.HolidayAdapter</calypso:type>
+                        <calypso:identifier code="USD" codifier="convention"/>
+                        <calypso:calypsoBusinessKey>
+                            <calypso:propertyName>code</calypso:propertyName>
+                            <calypso:propertyValue>USD</calypso:propertyValue>
+                        </calypso:calypsoBusinessKey>
+                    </calypso:holidays>
+                    <calypso:dateRoll>MOD_FOLLOW</calypso:dateRoll>
+                </calypso:paymentDateAdjustment>
+                <calypso:customFlow>false</calypso:customFlow>
+                <calypso:principalActual>true</calypso:principalActual>
+                <calypso:capitalizeInt>false</calypso:capitalizeInt>
+                <calypso:amortization>
+                    <calypso:principalStructure>Bullet</calypso:principalStructure>
+                    <calypso:sinkingFaceValue>false</calypso:sinkingFaceValue>
+                </calypso:amortization>
+                <calypso:compoundingMethod>NoCompound</calypso:compoundingMethod>
+                <calypso:compoundFrequency>NON</calypso:compoundFrequency>
+                <calypso:resetTiming>BEG_PER</calypso:resetTiming>
+            </calypso:definition>
+        </calypso:product>
+        <calypso:quantity>-1.0</calypso:quantity>
+        <calypso:tradePrice>0.0</calypso:tradePrice>
+        <calypso:accrual>0.0</calypso:accrual>
+        <calypso:marketInfo>0.0</calypso:marketInfo>
+        <calypso:splitBookPrice>0.0</calypso:splitBookPrice>
+        <calypso:splitBasePrice>0.0</calypso:splitBasePrice>
+    </calypso:calypsoObject>
+</calypso:calypsoDocument>

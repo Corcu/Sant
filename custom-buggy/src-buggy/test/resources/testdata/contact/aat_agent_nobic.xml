@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<CalypsoUploadDocument>
+    <Contact>
+        <Action>NEW</Action>
+        <Name>AAT_AGENT_NOBIC</Name>
+        <Role>Agent</Role>
+        <SupportedProduct>ALL</SupportedProduct>
+        <ContactType>Paper</ContactType>
+        <ProcessingOrg>BSTE</ProcessingOrg>
+        <LastName></LastName>
+        <FirstName></FirstName>
+        <Title></Title>
+        <Address></Address>
+        <City></City>
+        <State></State>
+        <ZipCode></ZipCode>
+        <Country>SPAIN</Country>
+        <PhoneNumber></PhoneNumber>
+        <Telex></Telex>
+        <Fax></Fax>
+        <Swift></Swift>
+        <Email></Email>
+        <ExternalRef>Test_AAT_AGENT_NOBIC_Paper_Agent_ALL</ExternalRef>
+        <Codes/>
+        <comments></comments>
+    </Contact>
+</CalypsoUploadDocument>

@@ -1,0 +1,28 @@
+include ':custom-shared-common'
+include ':custom-engine-common'
+
+include ':custom-dup-integration'
+
+include ':custom-shared-lib-core'
+include ':custom-dataserver-services-core'
+include ':custom-engine-core'
+include ':custom-client-core'
+
+include ':custom-shared-call-account'
+include ':custom-engine-call-account'
+
+include ':custom-shared-sec-trans'
+
+include ':custom-shared-brs'
+
+include ':custom-shared-pdv'
+include ':custom-engine-pdv'
+
+include ':custom-shared-equity'
+include ':custom-shared-bond'
+include ':custom-shared-repo'
+
+include ':custom-shared-rfmx'
+include ':custom-engine-rfmx'
+
+includeFlat 'dataserver', 'engineserver'

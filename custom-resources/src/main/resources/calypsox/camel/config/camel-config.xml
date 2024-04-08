@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	   xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+		
+	<import resource="camel-gdisponible-context.xml"/>
+	<import resource="camel-calypso-confirmation-context.xml"/>
+
+
+	<!--
+	<camelContext id="CamelContextMedusa" autoStartup="true" xmlns="http://camel.apache.org/schema/spring">
+		<route id="inToOutRoute" autoStartup="true">
+			<from uri="direct:sendMessage"/>
+			<log message="Routing message from inbox to outbox queue with data ${body}"/>
+			<to uri="activemq:queue:outbox"/>
+		</route>
+	</camelContext>
+	-->
+
+</beans>

@@ -1,0 +1,227 @@
+<html 
+	xmlns:concordion="http://www.concordion.org/2007/concordion" 
+	xmlns:ext="urn:concordion-extensions:2010">
+
+	<head>
+		<title>Generación de Mensaje de Pago Futuro detenido por KicOff de Divisa</title>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+		<script>
+	            function showMessage(elementId) {
+		            var x = document.getElementById(elementId);
+		            if (x.style.display === "none") {
+		                x.style.display = "block";
+		            } else {
+		                x.style.display = "none";
+		            }
+	            }
+	        </script>
+	</head>
+	
+	<body>
+	
+		<h1>Generación de Mensaje de Pago Futuro detenido por KicOff de Divisa</h1>
+			
+		<h2>Descripción</h2>
+	
+		<p>
+			Las Liquidaciones Swift se gestionan a traves de ventanas de Liquidacion. Estas se configuran en Calypso a traves de procesos de KickOff / CutOff.
+			Segun la configuracion de KIKO de cada divisa, los mensajes de liquidacion se quedan pendientes de envi hasta la fecha de Liquidacion de la divisa.
+		</p>
+		<p>
+			Insertamos una operación para una contrapartida con liquidaciones en el Futuro y dado que tiene SDI, quedará detenida en VERIFIED generando liquidaciones, 
+			y estas a su vez mensajes de Liquidacion. Comprobamos entonces que los mensajes se quedan detenidos pendientes de KickOff a traves del acceso a las Task 
+			relativas a la operación.
+		</p>
+
+		<h2>Datos de Referencia</h2>
+		<p>
+    		Insertamos una operación de tipo FXSwap utilizando el template 
+    		<span concordion:set="#template">PaymentMessageKickOff.xml</span>
+	       	con la contrapartida  
+	       	<span concordion:execute="setProperty('CPTY', #TEXT)">AAT_NEW_TELCO</span>.
+		</p>
+		
+		<p>
+			La External Reference de la operación será 
+			<span concordion:echo="#extRef=generateExternalRef()"> </span>  
+			<span concordion:execute="setProperty('EXTERNAL_REFERENCE', #extRef)"> </span>
+			y el Pricing Environment será
+			 <span concordion:set="#pricingEnv">default</span>.
+		</p>
+
+		<h2>Proceso de prueba</h2>
+		<p>			
+           Insertamos la operación. Para ello se toma como trade de referencia el que se muestra a continuación:
+			<span style="visibility: hidden;" concordion:set="#TradeFX">TradePaymentKickOff.png</span>
+			<span ext:embed="getImage(#TradeFX)"> </span>
+			<span concordion:execute="#ack=importCDUF(#template)"> </span> 
+		</p>        
+		
+<button onclick="showMessage('ack')">Mostrar Ack completo</button>	
+<pre concordion:echo="#ack" id="ack" style="display:none"> </pre>			
+
+		<table concordion:execute="#trade = getTrade(#ack.tradeId)">
+			<tr>
+				<th concordion:echo="#trade.id">Trade Id</th>
+				<th concordion:assertEquals="#trade.status">Status</th>
+				<th concordion:echo="#trade.settleDate">Settle Date</th>
+			</tr>
+			<tr><td></td><td>VERIFIED</td><td></td></tr>
+		</table>
+
+		<p>
+			Esperamos hasta que el <span concordion:set="#engine">TransferEngine</span>
+			(<span concordion:echo="waitForEngine(#engine)"> </span>
+			eventos pendientes)	procese todos sus eventos pendientes	
+		</p>
+		
+		
+		<p>
+			Comprobamos las liquidaciones del Deposito, existen solo dos por los principales:
+		</p>
+		<table concordion:verifyRows="#transfer : getNettedTransfers(#trade)">
+			<tr>
+				<th concordion:echo="#transfer.id">Id</th>
+				<th concordion:assertEquals="#transfer.settlementMethod">Settle Method</th>
+				<th concordion:assertEquals="#transfer.settlementAmount">Amount</th>
+				<th concordion:assertEquals="#transfer.eventType">Event Type</th>
+				<th concordion:assertEquals="#transfer.status">Status</th>
+				<th concordion:assertEquals="#transfer.valueDate">Value Date</th>
+				<th concordion:assertEquals="#transfer.nettingType">Netting Type</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td>SWIFT</td>
+				<td>30,000,000.00 EUR</td>
+				<td>PAYMENT</td>
+				<td>VERIFIED</td>
+				<td>25/01/2027</td>
+				<td>None</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>SWIFT</td>
+				<td>3,811,561.48 USD</td>
+				<td>RECEIPT</td>
+				<td>VERIFIED</td>
+				<td>25/01/2027</td>
+				<td>None</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>SWIFT</td>
+				<td>1,265,358.29 USD</td>
+				<td>PAYMENT</td>
+				<td>VERIFIED</td>
+				<td>26/04/2027</td>
+				<td>None</td>
+			</tr>			
+			<tr>
+				<td></td>
+				<td>SWIFT</td>
+				<td>10,000,000.00 EUR</td>
+				<td>RECEIPT</td>
+				<td>VERIFIED</td>
+				<td>26/04/2027</td>
+				<td>None</td>
+			</tr>			
+		</table>
+
+		<p>
+			Esperamos hasta que Calypso genera los Mensajes comprobando que el 
+			<span concordion:set="#engine">MessageEngine</span> no tenga eventos pendientes.
+			(<span concordion:echo="waitForEngine(#engine)"> </span> eventos pendientes)		
+		</p>
+	
+		<p>
+			Comprobamos que para cada liquidación, se genera un mensaje de Pago MT103 o de Cobro MT210 
+ 			se queda detenido en estado VERIFIED:
+ 		</p>
+ 		
+ 		<span concordion:execute="#msgs = getMessagesByEventTypesOrderedByTransferAmount(#trade, {'VERIFIED_RECEIPT','VERIFIED_PAYMENT'})"> </span>
+ 		<table concordion:verifyRows="#msg : #msgs">
+			<tr>
+				<th concordion:echo="#msg.id">Msg Id</th>
+				<th concordion:assertEquals="#msg.templateName">Plantilla del mensaje</th>
+				<th concordion:assertEquals="#msg.messageType">Tipo de Mensaje</th>
+				<th concordion:echo="#msg.transfer">Transfer</th>
+				<th concordion:assertEquals="#msg.status">Estado</th>
+				<th concordion:assertEquals="#msg.subAction">Sub Action</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td>MT103</td>
+				<td>PAYMENTMSG</td>
+				<td></td>
+				<td>VERIFIED</td>
+				<td>NONE</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>MT210</td>
+				<td>RECEIPTMSG</td>
+				<td></td>
+				<td>VERIFIED</td>
+				<td>NONE</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>MT210</td>
+				<td>RECEIPTMSG</td>
+				<td></td>
+				<td>VERIFIED</td>
+				<td>NONE</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>MT103</td>
+				<td>PAYMENTMSG</td>
+				<td></td>
+				<td>VERIFIED</td>
+				<td>NONE</td>
+			</tr>
+		</table>
+
+
+		<h2>Resultado</h2>
+		
+		<p>
+			Comprobamos que para cada mensaje de liquidación, se genera una Tarea asociada al KickOff de Divisa:
+ 		</p>
+
+		<span concordion:execute="#tasks=getNonCompletedTasksByEventTypes(#trade, {'VERIFIED_PAYMENTMSG','VERIFIED_RECEIPTMSG'})"> </span>
+		<table concordion:verifyRows="#task : #tasks">
+				<tr>
+					<th concordion:echo="#task.id">Task Id</th>
+					<th concordion:echo="#task.objectId">Message Id</th>
+					<th concordion:assertEquals="#task.kickOffDatetime">KickOff</th>
+					<th concordion:assertEquals="#task.eventType">Event Type</th>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td>25/01/27 01:00:00.999 o'clock CET</td>
+					<td>VERIFIED_PAYMENTMSG</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td>26/04/27 06:01:00.999 o'clock CEST</td>
+					<td>VERIFIED_PAYMENTMSG</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td>25/01/27 06:01:00.999 o'clock CET</td>
+					<td>VERIFIED_RECEIPTMSG</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td>26/04/27 01:00:00.999 o'clock CEST</td>
+					<td>VERIFIED_RECEIPTMSG</td>
+				</tr>
+		</table>				    
+	</body>
+	
+</html>

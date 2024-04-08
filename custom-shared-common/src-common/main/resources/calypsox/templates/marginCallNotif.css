@@ -1,0 +1,231 @@
+div.footer {
+	display: block;
+	text-align: center;
+	position: running(footer);
+}
+
+div.pageCounter {
+	display: block;
+	text-align: right;
+	position: running(pageCounter);
+}
+
+div.header {
+	display: block;
+}
+
+div.betweenSections {
+	height: 23pt;
+}
+
+div.title {
+	font-family: SansSerif;
+	font-size: 12pt;
+	text-align: center;
+	font: bold;
+	color: #000000;
+}
+
+
+div.titleSmaller {
+	font-family: SansSerif;
+	font-size: 12pt;
+	text-align: center;
+	font: bold;
+	color: #000000;
+}
+@page {
+	size: 8.5in 11.7in;
+	margin-left: 0.15in;
+	margin-right: 0.15in;
+	margin-top: 0.1in;
+	margin-bottom: 0.6in;
+	border: thin solid none;
+	padding: 0.75em;
+	counter-increment: page;
+	font-family: SansSerif;
+	@top-left {
+		content:element(header)
+	}
+	@bottom-center {
+		content: element(footer)
+	}
+	@bottom-right{
+		content: element(pageCounter)
+	}
+	@top-right {
+		content: "Page " counter(page) " / " counter(pages)
+	}
+	@font-face {
+		font-family: SansSerif;
+	}
+}
+
+table.noBorderTable {
+	width: 100%;
+	font-family: SansSerif;
+	font-size: 9pt;
+	border: thin solid none;
+	-fs-table-paginate: paginate;
+}
+
+table.noBorderTable td {
+	padding: 7px;
+	border: thin solid none;
+}
+
+table.noBorderTableSmaller {
+	width: 50%;
+	font-family: SansSerif;
+	text-align: left;
+	font-size: 9pt;
+	border: thin solid none;
+	-fs-table-paginate: paginate;
+}
+
+table.noBorderTableSmaller td {
+    text-align: left;
+	padding: 10px;
+	height:8px;
+	border: thin solid none;
+}
+
+table.noBorderTableSmaller th {
+    text-align: left;
+	padding: 10px;
+	height:8px;
+	border: thin solid none;
+}
+
+table.borderTable {
+	width: 100%;
+	font-family: SansSerif;
+	font-size: 7pt;
+	border-collapse: collapse;
+	position:relative;margin-top:1.5cm;
+}
+
+table.borderTable td {
+	border:1px solid #B8B8B8;
+	height:8px;
+	padding: 1px 1px 1px 1px
+}
+
+table.borderTable th {
+	border:1px solid #B8B8B8;
+	height:8px;
+	padding: 1px 1px 1px 1px;
+}
+
+
+table.firstPageBorderTable {
+	width: 100%;
+	font-family: SansSerif;
+	font-size: 7pt;
+	border-collapse: collapse;
+}
+
+table.firstPageBorderTable td {
+	border:1px solid #B8B8B8;
+	height:8px;
+	padding: 1px 1px 1px 1px
+}
+
+table.firstPageBorderTable th {
+	border:1px solid #B8B8B8;
+	height:8px;
+	padding: 1px 1px 1px 1px;
+}
+
+
+table.noticeList { 
+	border-collapse: collapse;
+	width: 100%;
+	font-family: SansSerif; 
+	font-size: 8pt; 
+}
+
+table.noticeList td{ 
+	border:1px solid #B8B8B8;
+	padding: 1px 1px 1px 1px
+	 
+}
+
+table.noticeList th{ 
+	border:1px solid #B8B8B8;
+	font-size: 7pt; 
+	padding: 1px 1px 1px 1px;
+}
+
+
+table.sdiList td{ 
+	border:1px solid #000000;
+	padding:3px 7px 2px 7px;
+
+}
+
+table.sdiList{ 
+	border-collapse:collapse;
+	font-family: SansSerif; 
+	font-size: 7pt; 
+}
+
+tr.interRow {
+	height: 9pt;
+}
+
+span.stiny {
+	font-family: SansSerif;
+	font-size: 6pt;
+	color: #000000;
+}
+
+span.tiny {
+	font-family: SansSerif;
+	font-size: 7pt;
+	color: #000000;
+}
+
+span.smaller {
+	font-family: SansSerif;
+	font-size: 8pt;
+	color: #000000;
+}
+
+span.small {
+	font-family: SansSerif;
+	font-size: 9pt;
+	color: #000000;
+}
+
+span.normal {
+	font-family: SansSerif;
+	font-size: 9pt;
+	color: #000000;
+}
+
+span.medium {
+	font-family: SansSerif;
+	font-size: 11pt;
+	color: #000000;
+}
+
+span.large {
+	font-family: SansSerif;
+	font-size: 12pt;
+	color: #000000;
+}
+
+span.footer {
+	font-family: SansSerif;
+	font-size: 7pt;
+	color: #000000;
+}
+
+#pagenumber:before {
+    content: counter(page);
+}
+
+#pagecount:before {
+    content: counter(pages);
+}

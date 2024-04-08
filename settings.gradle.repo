@@ -1,0 +1,6 @@
+include ':custom-shared-common'
+include ':custom-engine-common'
+
+include ':custom-shared-repo'
+
+includeFlat 'dataserver', 'engineserver'

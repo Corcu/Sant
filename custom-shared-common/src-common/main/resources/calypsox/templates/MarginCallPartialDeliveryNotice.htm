@@ -1,0 +1,149 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<link rel="stylesheet" href="marginCallNotif.css"
+	type="text/css" media="screen,print">
+</head>
+<body style="width: 750;">
+	<!--calypso>include "header.htm";</calypso-->
+	<!--calypso>include "footer.htm";</calypso-->
+<span class="normal">
+
+	<!--calypso>
+    if (|CONTRACT_TYPE|=="CSD")
+    inline "
+    	|POLITE|<br><br>Pursuant to the |CONTRACT_TYPE| Master Agreement and its Credit Support Annex dated as of  |CONTRACT_OPENDATE|. 
+ 		Sign date of Master Agreement, (the &quot;Agreement&quot;) between  |SENDER_FULL_NAME| and |RECEIVER_FULL_NAME| (&quot;Counterparty&quot;) 
+ 		as amended from time to time, we hereby confirm notice of the following movement(s) in connection with the corresponding 
+ 		margin call sent by |ALLOCATION_DELIVERER_NAME| to |ALLOCATION_RECEIVER_NAME|.
+	";
+	else if (|CONTRACT_TYPE|=="CGAR")
+    inline "
+		<br><br>Con referencia con contrato |CONTRACT_TYPE| y sus provisiones de  Garant&iacute;as asociadas desde |CONTRACT_OPENDATE| entre |SENDER_FULL_NAME| y |RECEIVER_FULL_NAME|,  
+		en ocasiones ratificado, por la presente confirmamos el aviso de entrega de garant&iacute;as de |ALLOCATION_DELIVERER_NAME| a |ALLOCATION_RECEIVER_NAME|.
+		<br><br>
+		Este aviso es un acuerdo parcial a la demanda del margin call solicitado debido a las diferencias en la valoraci&oacute;n de las operaciones colateralizadas. 
+		Confirma la entrega y liquidaci&oacute;n de los movimientos de garant&iacute;as en la cantidad sin disputa.
+	";
+	else inline "
+   		|POLITE|<br><br>Pursuant to the |CONTRACT_TYPE| and its collateral related provisions dated as of |CONTRACT_OPENDATE|, (the &quot;Agreement&quot;) 
+		between |SENDER_FULL_NAME| and |RECEIVER_FULL_NAME| (&quot;Counterparty&quot;) as amended from time to time, 
+		we hereby confirm receipt demand notice for the delivery of collateral from |ALLOCATION_DELIVERER_NAME| to |ALLOCATION_RECEIVER_NAME|.
+		<br><br>
+		This notice is a partial agreement to the margin call requested due to differences in the valuation of collateralized trades. 
+		It confirms the delivery and settlement details of collateral movement which is the undisputed amount.
+	";
+	</calypso-->
+
+</span>
+	<br>
+	<br>
+	<div class="title">
+		<b>
+	<!--calypso>
+	    if (|CONTRACT_TYPE|=="CSD")
+	    inline "
+			Initial Margin Requirement Movement Notice
+		";
+		else if (|CONTRACT_TYPE|=="CGAR")
+	    inline "
+	    	Detalle de Garant&iacute;as
+		";
+	    else inline "
+	    	Collateral Movement Details
+		";
+    </calypso-->
+		</b>
+	</div>
+	<br>
+	<table class="small" style="width: 100%">
+		<tr>
+	<!--calypso>
+	    if (|CONTRACT_TYPE|!="CGAR")
+	    inline "
+			<td style='text-align: left;'><span class='small'><b>Amount to be delivered/received in |CONTRACT_CURRENCY|</b>
+			</span></td>
+		";
+	    else inline "
+			<td style='text-align: left;'><span class='small'><b>Detalle de Garant&iacute;as (|CONTRACT_CURRENCY|)</b>
+			</span></td>
+		";
+    </calypso-->
+			<td style='text-align: right;'><span class='small'><b>|CONTRACT_CURRENCY| |COLLATERAL_VALUE|</b></span>
+			</td>
+		</tr>
+		<tr>
+	<!--calypso>
+		if (|CONTRACT_TYPE|=="CSD")
+	    inline "
+			<td style='text-align: left;'><span class='small'><b>|SENDER_FULL_NAME| IM requirement</b></span></td>
+   		";
+   		else if (|CONTRACT_TYPE|=="CGAR")
+	    inline "
+	    	<td style='text-align: left;'><span class='small'><b>|SENDER_FULL_NAME| Exposici&oacute;n Neta de Riesgo</b></span></td>
+	    ";
+   		else inline "
+	    	<td style='text-align: left;'><span class='small'><b>|SENDER_FULL_NAME| Exposure</b></span></td>
+	    ";
+
+	</calypso-->
+			<td style='text-align: right;'><span class='small'><b>|NET_BALANCE|</b></span></td>
+		</tr>
+		<tr>
+	<!--calypso>
+		if (|CONTRACT_TYPE|=="CSD")
+	    inline "
+			<td style='text-align: left;'><span class='small'><b>|RECEIVER_FULL_NAME| IM requirement</b></span></td>
+   		";
+   		else if (|CONTRACT_TYPE|=="CGAR")
+	    inline "
+	    	<td style='text-align: left;'><span class='small'><b>|RECEIVER_FULL_NAME| Exposici&oacute;n Neta de Riesgo</b></span></td>
+	    ";
+   		else inline "
+	    	<td style='text-align: left;'><span class='small'><b>|RECEIVER_FULL_NAME| Exposure</b></span></td>
+	    ";
+
+	</calypso-->
+			<td style='text-align: right;'><span class='small'><b>|CPT_MTM|</b></span></td>
+		</tr>
+	</table>
+	<br> |ALLOCATIONS|
+	<br>
+	<p>
+		<span class="normal">
+		
+		<!--calypso>
+			if (|CONTRACT_TYPE|=="CGAR")
+		    inline "
+					En caso de presentarse alguna duda o comentario sobre lo anterior, favor de contactarnos
+			";
+			else inline "
+					Should you have any questions please do	not hesitate to contact us.</br> Kind Regards,
+			";
+   		</calypso-->
+		
+		</span>
+	</p>
+	<br>
+	<span class="smaller"><b>
+	
+		<!--calypso>
+			if (|CONTRACT_TYPE|=="CGAR")
+		    inline "
+					|SENDER_FULL_NAME| INSTRUCCIONES DE PAGO
+			";
+			else inline "
+					|SENDER_FULL_NAME| SETTLEMENT INSTRUCTIONS
+			";
+   		</calypso-->
+	
+	</b></span>
+	<!--calypso>
+    if (|MC_PROCESSING_ORG|==|PO_SOVEREIGN|)
+    inline "|SETTLEMENT_INSTRUCTIONS_ABA_CODE|";
+    else inline "|SETTLEMENT_INSTRUCTIONS|";
+	</calypso-->
+	<br>
+	<br>
+</body>
+</html>

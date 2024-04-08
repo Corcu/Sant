@@ -1,0 +1,110 @@
+<html 
+	xmlns:concordion="http://www.concordion.org/2007/concordion" 
+	xmlns:ext="urn:concordion-extensions:2010">
+
+	<head>
+		<title>Generación de Confirmación Swift sin SDIs de un FX</title>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+		<script>
+	            function showMessage(elementId) {
+		            var x = document.getElementById(elementId);
+		            if (x.style.display === "none") {
+		                x.style.display = "block";
+		            } else {
+		                x.style.display = "none";
+		            }
+	            }
+	        </script>
+	</head>
+	
+	<body>
+	
+		<h1>No Generación de Confirmación Swift sin SDIs de un FX</h1>
+			
+		<h2>Descripción</h2>
+	
+		<p>
+			Las operaciones de FX imputadas contra Contrapartidas en las cuales exista un contacto de tipo SwiftConf, generarán confirmaciones 
+			de tipo SWIFTCONFIRM en los estados VERIFIED, TERMINATED y CANCELED.
+		</p>
+		<p>
+			Este test inserta una operación para una contrapartida que tiene contacto SwiftConf pero no tiene SDI que cumplan con los 
+			requisitos para su asignación automática. La operación, por tanto, quedará detenida en PENDING NO generando una 
+			confirmación de tipo SWIFTCONFIRM.
+		</p>
+
+		<h2>Datos de Referencia</h2>
+		<p>
+    		Insertamos una operación de tipo FXSwap utilizando el template 
+    		<span concordion:set="#template">GenConfSwifNOSDIFX.xml</span>
+	       	con la contrapartida  
+	       	<span concordion:execute="setProperty('CPTY', #TEXT)">AAT_NEW_BANK</span>.
+		</p>
+		
+		<p>
+			La External Reference de la operación será 
+			<span concordion:echo="#extRef=generateExternalRef()"> </span>  
+			<span concordion:execute="setProperty('EXTERNAL_REFERENCE', #extRef)"> </span>
+			y el Pricing Environment será
+			 <span concordion:set="#pricingEnv">default</span>.
+		</p>
+
+		<p>
+			A modo de referencia se pueden tener en cuenta las siguientes
+			imágenes: 
+		</p>
+		<p>
+    		Los datos correspondientes al contacto SwiftConf de la contrapartida AAT_NEW_BANK:
+			<span style="visibility: hidden;" concordion:set="#contactCpty">ContactCprtyFXnoSDI.png</span>
+			<span ext:embed="getImage(#contactCpty)"> </span>
+		</p>
+
+		<h2>Proceso de prueba</h2>
+		<p>			
+           Insertamos la operación. Para ello se toma como trade de referencia el que se muestra a continuación:
+			<span style="visibility: hidden;" concordion:set="#TradeFX">TradeConfSwiftNoSDI.png</span>
+			<span ext:embed="getImage(#TradeFX)"> </span>
+			<span concordion:execute="#ack=importCDUF(#template)"> </span> 
+		</p>        
+		
+<button onclick="showMessage('ack')">Mostrar Ack completo</button>	
+<pre concordion:echo="#ack" id="ack" style="display:none"> </pre>			
+
+		<table concordion:execute="#trade = getTrade(#ack.tradeId)">
+			<tr>
+				<th concordion:echo="#trade.id">Trade Id</th>
+				<th concordion:assertEquals="#trade.status">Status</th>
+				<th concordion:echo="#trade.settleDate">Settle Date</th>
+			</tr>
+			<tr><td></td><td>PENDING</td><td></td></tr>
+		</table>
+
+		<p>
+            Esperamos hasta que el <span concordion:set="#engine">MessageEngine</span>
+            (<span concordion:echo="waitForEngine(#engine)"></span>)
+            procesen todos sus eventos pendientes.
+		</p>
+		
+		
+		<h2>Resultado</h2>
+		
+	    <p>
+			Comprobamos que Calypso ha generado una confirmacion de tipo 
+			<span concordion:set="#msgType">SWIFTCONFIRM</span>: 
+		</p>
+
+		<table concordion:verifyRows="#msg : getMessagesByMsgTypes(#trade, {#msgType})">
+				<tr>
+					<th concordion:echo="#msg.id">Message Id</th>
+					<th concordion:echo="#msg.trade">Trade</th>
+					<th concordion:assertEquals="#msg.eventType">Event Type</th>
+					<th concordion:assertEquals="#msg.messageType">Message Type</th>
+					<th concordion:assertEquals="#msg.templateName">Template Name</th>
+					<th concordion:assertEquals="#msg.receiver">Receiver</th>
+				</tr>
+		</table>
+    
+	</body>
+	
+</html>
+		

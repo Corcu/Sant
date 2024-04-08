@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="collateralTransferReturnStatus">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="transactionId" type="xs:integer"/>
+				<xs:element name="messageId" type="xs:integer"/>
+				<xs:element name="status" type="statusType"/>
+				<xs:element name="errorDescription" type="xs:string"/>
+				<xs:element name="contractId" type="xs:integer"  minOccurs="0" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="statusType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="(OK|FAIL|TIME_OUT)"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
+

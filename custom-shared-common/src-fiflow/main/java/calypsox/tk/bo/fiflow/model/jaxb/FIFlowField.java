@@ -1,0 +1,185 @@
+package calypsox.tk.bo.fiflow.model.jaxb;
+
+import calypsox.tk.bo.fiflow.staticdata.FIFlowSignedNumberIndicatorMapping;
+import com.calypso.tk.core.JDate;
+import com.calypso.tk.core.Util;
+import org.apache.commons.lang.StringUtils;
+
+import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+
+/**
+ * @author aalonsop
+ * Host demands fixed width formatted columns
+ */
+public class FIFlowField<T> {
+
+    static final char NUMBER_PAD_CHAR = '0';
+    static final char DEC_SEPARATOR = '.';
+    static final DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    NumberFormatterWrapper formatterWrapper;
+
+    int lenght;
+    int decimalLenght;
+    boolean isSignedNumber;
+    String content;
+
+    /**
+     * JAXB Needed
+     */
+    FIFlowField() {
+    }
+
+    /**
+     * @param lenght
+     */
+    public FIFlowField(int lenght) {
+        this(lenght, 0);
+    }
+
+    /**
+     * @param lenght
+     * @param isSignedNumber
+     */
+    public FIFlowField(int lenght, boolean isSignedNumber) {
+        this(lenght, 0, isSignedNumber);
+    }
+
+    /**
+     * @param lenght
+     * @param decimalLenght For doubles only
+     */
+    public FIFlowField(int lenght, int decimalLenght) {
+        this(lenght, decimalLenght, false);
+    }
+
+    /**
+     * @param lenght
+     * @param decimalLenght
+     * @param isSignedNumber
+     */
+    public FIFlowField(int lenght, int decimalLenght, boolean isSignedNumber) {
+        this.lenght = lenght;
+        this.decimalLenght = decimalLenght;
+        this.isSignedNumber = isSignedNumber;
+        this.content = formatStringContent("");
+        this.formatterWrapper = new NumberFormatterWrapper();
+    }
+
+    public void setContent(T rawContent) {
+        this.content = formatContent(rawContent);
+    }
+
+    public String getContent() {
+        return this.content;
+    }
+
+    @Override
+    public String toString() {
+        return this.content;
+    }
+
+
+    private String formatContent(T rawContent) {
+        String formattedContent = rawContent.toString();
+        if (rawContent instanceof String) {
+            formattedContent = formatStringContent((String) rawContent);
+        } else if (rawContent instanceof JDate) {
+            formattedContent = formatJDateContent((JDate) rawContent);
+        } else if (rawContent instanceof Number) {
+            formattedContent = formatterWrapper.formatNumber((Number) rawContent);
+
+        }
+        return cropFieldIfExcedsLength(formattedContent);
+    }
+
+    private String formatStringContent(String rawContent) {
+        return StringUtils.rightPad(rawContent, this.lenght);
+    }
+
+    private String formatJDateContent(JDate rawContent) {
+        LocalDate date = Optional.ofNullable(rawContent)
+                .map(ld -> LocalDate.of(ld.getYear(), ld.getMonth(), ld.getDayOfMonth()))
+                .orElseGet(() -> LocalDate.of(1, 1, 1901));
+        return datePattern.format(date);
+    }
+
+    private String cropFieldIfExcedsLength(String formattedContent) {
+        String croppedContent = formattedContent;
+        if (formattedContent.length() > this.lenght) {
+            croppedContent = formattedContent.substring(0, this.lenght);
+        }
+        return croppedContent;
+    }
+
+    public static void main(String[] args) {
+        FIFlowField<Long> fieldI = new FIFlowField<>(15, true);
+        fieldI.setContent(-2200006200L);
+        System.out.println(fieldI.toString());
+        FIFlowField<Integer> fieldIp = new FIFlowField<>(15, true);
+        fieldIp.setContent(12325469);
+        System.out.println(fieldIp.toString());
+    }
+
+    /**
+     * Encapsulates number formatting logic
+     *
+     * @param <T>
+     */
+    private class NumberFormatterWrapper {
+
+        DecimalFormat formatter;
+
+        private NumberFormatterWrapper() {
+            this.formatter = new DecimalFormat(buildFormatterPattern());
+            this.formatter.setNegativePrefix("");
+        }
+
+        private String buildFormatterPattern() {
+            String integerPattern = buildIntegerFormatterPattern();
+            if (decimalLenght > 0) {
+                String decimalPattern = StringUtils.leftPad("", decimalLenght, NUMBER_PAD_CHAR);
+                integerPattern = integerPattern + DEC_SEPARATOR + decimalPattern;
+            }
+            return integerPattern;
+        }
+
+        private String buildIntegerFormatterPattern() {
+            return StringUtils.leftPad("", lenght - decimalLenght, NUMBER_PAD_CHAR);
+        }
+
+        private String formatNumber(Number rawContent) {
+            String formattedNumber = Optional.ofNullable(rawContent).map(formatter::format).orElse("0");
+            formattedNumber = formattedNumber
+                    .replace(String.valueOf(formatter.getDecimalFormatSymbols().getDecimalSeparator()), "");
+            return addHostSignIndicator(formattedNumber, rawContent);
+        }
+
+        /**
+         * @param formattedNumber
+         * @return
+         */
+        private String addHostSignIndicator(String formattedNumber, Number rawContent) {
+            String result = formattedNumber;
+            if (isSignedNumber && !Util.isEmpty(formattedNumber)) {
+                StringBuilder signedNumberBuilder = new StringBuilder(formattedNumber);
+                FIFlowSignedNumberIndicatorMapping signChar = getHostMappingCharValue(rawContent, signedNumberBuilder);
+                signedNumberBuilder.setCharAt(formattedNumber.length() - 1, signChar.getValue());
+                result = signedNumberBuilder.toString();
+            }
+            return result;
+        }
+
+        private FIFlowSignedNumberIndicatorMapping getHostMappingCharValue(Number rawContent, StringBuilder signedNumberBuilder) {
+            boolean isPositive = false;
+            if (rawContent.longValue() > 0) {
+                isPositive = true;
+            }
+            return FIFlowSignedNumberIndicatorMapping.getTargetChar(signedNumberBuilder.charAt(signedNumberBuilder.length() - 1), isPositive);
+        }
+
+    }
+}

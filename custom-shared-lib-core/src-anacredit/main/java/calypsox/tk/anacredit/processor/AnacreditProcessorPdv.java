@@ -1,0 +1,115 @@
+package calypsox.tk.anacredit.processor;
+
+import calypsox.tk.anacredit.api.AnacreditConstants;
+import calypsox.tk.anacredit.api.copys.*;
+import calypsox.tk.anacredit.formatter.AnacreditFormatter;
+import calypsox.tk.anacredit.formatter.AnacreditFormatterPdv;
+
+import calypsox.tk.anacredit.util.AnacreditUtilities;
+import com.calypso.tk.core.*;
+import com.calypso.tk.marketdata.PricingEnv;
+import com.calypso.tk.product.SecFinance;
+import com.calypso.tk.report.DefaultReportOutput;
+import com.calypso.tk.report.Report;
+import com.calypso.tk.report.ReportRow;
+import com.calypso.tk.report.TradeReportStyle;
+import com.calypso.tk.util.StopWatch;
+
+import java.util.List;
+import java.util.Vector;
+
+/**
+ * Process ReportRows to produce Copy3, Copy4 and Copy4A records according to template selection
+ */
+public class AnacreditProcessorPdv extends AnacreditProcessorSecFinance {
+
+    private AnacreditFormatterPdv _formatter = new AnacreditFormatterPdv();
+
+    protected ReportRow createCopy3OperRecord(ReportRow reportRow, PricingEnv pEnv, Vector errorMsgs) {
+        Copy3Record r = _formatter.formatRecOperacionesCopy3(reportRow, pEnv, _holidays, errorMsgs);
+        if (r != null) {
+            //Set copy3 type on ReportRow
+            reportRow.setProperty(AnacreditConstants.COPY_3, r);
+            return reportRow;
+        }
+        return null;
+
+    }
+
+    @Override
+    protected List<Copy4ARecord> createCopy4APersonaRecord(ReportRow reportRow, Vector errorMsgs) {
+        return _formatter.formatCopy4APersona(reportRow, errorMsgs);
+    }
+
+    @Override
+    protected List<Copy4Record> createCopy4ImportesRecord(ReportRow reportRow, Vector errorMsgs) {
+        return _formatter.formatImportesCopy4(reportRow, errorMsgs);
+    }
+
+    @Override
+    protected List<Copy11Record> createCopy11GarantiasRealesRecord(CacheModuloD cache, ReportRow reportRow, Vector errorMsgs) {
+        return _formatter.formatCopy11Garantias(cache, reportRow, errorMsgs);
+    }
+
+    @Override
+    protected List<Copy13Record> createCopy13ActivosFinancerosRecord(CacheModuloD cache, ReportRow reportRow, Vector errorMsgs) {
+        return _formatter.formatCopy13ActivosFinanceros(cache, reportRow, errorMsgs);
+    }
+
+    @Override
+    protected AnacreditFormatter getFormatter() {
+        return _formatter;
+    }
+
+    @Override
+    protected void preCalculatePricerMeasures(Report report, DefaultReportOutput output, List<ReportRow> reportRows, Vector errorMsgs) {
+
+        if (reportRows == null)  {
+            return;
+        }
+
+        Log.system(this.getClass().getSimpleName(), "Start to calculate Pricer Measures for cache.");
+
+        TradeReportStyle trs = new TradeReportStyle();
+
+        StopWatch watch = new StopWatch();
+        watch.start();
+
+        reportRows.stream().forEach(reportRow -> {
+            Trade trade = reportRow.getProperty(ReportRow.TRADE);
+            if (!(trade.getProduct() instanceof SecFinance)) {
+                return;
+            }
+            Double npvCollat = AnacreditUtilities.calculatePM(report.getValuationDatetime(),
+                    trade, new PricerMeasure(PricerMeasure.NPV_COLLAT), report.getPricingEnv().getName());
+
+            if (npvCollat != null && !npvCollat.isNaN()) {
+                reportRow.setProperty("NPV_COLLAT", npvCollat);
+            }
+
+            Object nominalObj = trs.getColumnValue(reportRow, "Current Nominal", errorMsgs);
+            if (null != nominalObj
+                    && nominalObj instanceof Amount)   {
+                Double nominal = ((Amount)nominalObj).get();
+                if (nominal != null) {
+                    reportRow.setProperty("Nominal", nominal);
+                }
+            }
+
+
+            Object qty = trs.getColumnValue(reportRow, TradeReportStyle.QUANTITY, errorMsgs);
+            if (null != qty
+                    && qty instanceof Amount)   {
+                Double qtyD = ((Amount)nominalObj).get();
+                if (qtyD != null) {
+                    reportRow.setProperty("Quantity", qtyD);
+                }
+            }
+        });
+
+        watch.stop();
+        System.out.println("### Total execution time to calculate Measures : " + watch.getElapsedTimeMs());
+
+        Log.system(this.getClass().getSimpleName(), "Calculate PM done! cached for " + reportRows.size() + " records.");
+    }
+}

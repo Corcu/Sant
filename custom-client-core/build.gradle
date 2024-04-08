@@ -1,0 +1,43 @@
+apply plugin: 'calypso-java-project'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+jar {
+  manifest {
+    attributes(
+      'JAR_COMPILATION_DATE': System.getenv('COMPILATION_DATE'),
+      'JAR_GIT_BRANCH_NAME': System.getenv('GIT_BRANCH'),
+      'JAR_RELEASE_NAME': System.getenv('RELEASE'),
+      'JAR_SETTINGS_GRADLE': System.getenv('PROJECT')
+    )
+  }
+}
+
+dependencies {
+	compile project(':custom-shared-lib-core')
+	compile project(':custom-shared-call-account')
+	compile project(':custom-shared-sec-trans')
+	compile project(':custom-shared-brs')
+	compile project(':custom-shared-bond')
+	compile project(':custom-shared-equity')
+	compile project(':custom-shared-pdv')
+	compile project(':custom-shared-repo')
+	compile fileTree(dir: 'src-core/calypso/jars/', include: '**/*.jar')
+	compile files(project.file('../../../client/resources').path)
+	compile fileTree(dir: '../../../client/lib', exclude: 'custom-*.jar', include: '*.jar')
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs = ['src-core/main/java','src-regulatorio/main/java']
+		}
+		resources {
+            srcDirs= ['src-core/main/resources','src-regulatorio/main/resources']
+        }
+	}
+}
+
+ext.deployment="client"

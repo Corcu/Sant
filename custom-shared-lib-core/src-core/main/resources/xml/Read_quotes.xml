@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<quotesLists>
+		<quotesList>
+			<type>bond</type>
+			<quote>
+				<isin>ES086359162</isin>
+				<currency>EUR</currency>
+			</quote>
+			<quote>
+				<isin>ES035162957</isin>
+				<currency>EUR</currency>
+			</quote>
+			
+		</quotesList>
+		<quotesList>
+			<type>equity</type>
+			<quote>
+				<isin>UK1395473</isin>
+				<currency>GBP</currency>
+			</quote>
+			<quote>
+				<isin>ES035162957</isin>
+				<currency>EUR</currency>
+			</quote>
+		</quotesList>
+</quotesLists>
+

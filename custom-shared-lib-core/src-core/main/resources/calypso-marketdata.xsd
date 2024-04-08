@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2006 sp2 U (http://www.altova.com) by Jerome Thibaud (private) -->
+<!--
+ * Copyright (c) 2000 by Calypso Technology, Inc. 595 Market Street, Suite 1980,
+ * San Francisco, CA 94105, U.S.A. All rights reserved.
+ * 
+ * This software is the confidential and proprietary information of Calypso
+ * Technology, Inc. ("Confidential Information"). You shall not disclose such
+ * Confidential Information and shall use it only in accordance with the terms
+ * of the license agreement you entered into with Calypso Technology.
+ -->
+<xsd:schema xmlns:calypso="http://www.calypso.com/xml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.calypso.com/xml" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xsd:include schemaLocation="calypso-common.xsd"/>
+	<xsd:complexType name="QuoteValue">
+		<xsd:sequence>
+			<xsd:element name="quoteName" type="calypso:Name"/>
+			<xsd:element name="quoteSetName" type="calypso:Name" minOccurs="0"/>
+			<xsd:element name="quoteDate" type="xsd:date" minOccurs="0"/>
+			<xsd:element name="type" type="calypso:DomainValue"/>
+			<xsd:element name="source" type="calypso:DomainValue" minOccurs="0"/>
+			<xsd:element name="ask" type="xsd:decimal" minOccurs="0"/>
+			<xsd:element name="bid" type="xsd:decimal" minOccurs="0"/>
+			<xsd:element name="open" type="xsd:decimal" minOccurs="0"/>
+			<xsd:element name="close" type="xsd:decimal" minOccurs="0"/>
+			<xsd:element name="low" type="xsd:decimal" minOccurs="0"/>
+			<xsd:element name="high" type="xsd:decimal" minOccurs="0"/>
+			<xsd:element name="last" type="xsd:decimal" minOccurs="0"/>
+			<xsd:element name="quoteDatetime" type="xsd:dateTime" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PricingParamType">
+		<xsd:complexContent>
+			<xsd:extension base="calypso:Object">
+				<xsd:sequence>
+					<xsd:element name="name" type="xsd:string" />
+					<xsd:element name="type" type="xsd:string" />
+					<xsd:element name="domain" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="global" type="xsd:boolean"/>
+					<xsd:element name="displayName" type="xsd:string" />
+					<xsd:element name="defaultValue" type="xsd:string" />
+					<xsd:element name="comment" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="Quote">
+		<xsd:complexContent>
+			<xsd:extension base="calypso:Object">
+				<xsd:sequence>
+					<xsd:element name="estimated" type="xsd:boolean"/>
+					<xsd:element name="knownDate" type="xsd:date" minOccurs="0"/>
+					<xsd:element name="value" type="calypso:QuoteValue"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="AdjustedQuote">
+		<xsd:sequence>
+			<xsd:element name="value" type="calypso:QuoteValue"/>
+			<xsd:element name="adjustement" type="calypso:Adjustment" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="QuoteSet">
+		<xsd:complexContent>
+			<xsd:extension base="calypso:Object">
+				<xsd:sequence>
+					<xsd:element name="name" type="xsd:string"/>
+					<xsd:element name="parentQuoteSet" type="calypso:Identifiers" minOccurs="0"/>
+					<xsd:element name="comment" type="calypso:Comment" minOccurs="0"/>
+					<xsd:element name="intraday" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="FullQuoteSet">
+		<xsd:complexContent>
+			<xsd:extension base="calypso:QuoteSet">
+				<xsd:sequence>
+					<xsd:element name="quote" type="calypso:Quote" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="PricingEnvironment">
+		<xsd:complexContent>
+			<xsd:extension base="calypso:Object">
+				<xsd:sequence>
+					<xsd:element name="name" type="xsd:string"/>
+					<xsd:element name="comment" type="calypso:Comment" minOccurs="0"/>
+					<xsd:element name="baseCurrency" type="calypso:DomainValueIdentifier" minOccurs="0"/>
+					<xsd:element name="pricerConfiguration" type="calypso:Identifiers"/>
+					<xsd:element name="quoteSet" type="calypso:Identifiers"/>
+					<xsd:element name="pricingParameters" type="calypso:Identifiers"/>
+					<xsd:element name="timezone" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="dayChangeRule" type="xsd:string" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="PricingParameters">
+		<xsd:complexContent>
+			<xsd:extension base="calypso:Object">
+				<xsd:sequence>
+					<xsd:element name="name" type="xsd:string"/>
+					<xsd:element name="comment" type="calypso:Comment" minOccurs="0"/>
+					<xsd:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="productType" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="parameterName" type="calypso:DomainValue"/>
+								<xsd:element name="parameterTypeIdentifier" type="calypso:Identifiers"/>
+								<xsd:choice>
+									<xsd:element name="parameterValue" type="xsd:anyType"/>
+									<xsd:element name="parameterBoolean" type="xsd:boolean"/>
+									<xsd:element name="parameterString" type="xsd:string"/>
+									<xsd:element name="parameterInteger" type="xsd:integer"/>
+									<xsd:element name="parameterDouble" type="xsd:decimal"/>
+									<xsd:element name="parameterDate" type="xsd:date"/>
+									<xsd:element name="parameterTenor" type="xsd:string"/>
+									<xsd:element name="parameterAmount" type="xsd:decimal"/>
+									<xsd:element name="parameterBAAmount" type="xsd:decimal"/>
+								</xsd:choice>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="PricerConfiguration">
+		<xsd:complexContent>
+			<xsd:extension base="calypso:Object">
+				<xsd:sequence>
+					<xsd:element name="name" type="xsd:string"/>
+					<xsd:element name="parent" type="calypso:Identifiers" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="comment" type="calypso:Comment" minOccurs="0"/>
+					<xsd:element name="commodityMarketData" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="usage" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="productType" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="productExtendedType" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="productSubType" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="commodity" type="calypso:Identifiers"/>
+								<xsd:element name="marketDataItem" type="calypso:Identifiers"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="pricerOverrideKeys" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="keyName" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="productType" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="pricerName" type="calypso:DomainValueIdentifier"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="mdiOverrideKeys" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="keyName" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="pricerName" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="usage" type="xsd:string"/>
+								<xsd:element name="type" type="xsd:string"/>
+								<xsd:element name="marketDataItemId" type="calypso:Identifiers"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="correlationMatrix" type="calypso:Identifiers" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="creditMarketData" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="usage" type="calypso:DomainValueIdentifier"/>
+								<xsd:choice minOccurs="0">
+									<xsd:element name="ticker" type="calypso:Identifiers"/>
+									<xsd:element name="basket" type="calypso:Identifiers"/>
+									<xsd:sequence>
+										<xsd:element name="currency" type="calypso:DomainValueIdentifier"/>
+										<xsd:element name="issuer" type="calypso:Identifiers" minOccurs="0"/>
+										<xsd:element name="seniority" type="calypso:DomainValueIdentifier"/>
+										<xsd:element name="creditKeyword" type="xsd:string"/>
+									</xsd:sequence>
+								</xsd:choice>
+								<xsd:choice>
+									<xsd:element name="curve" type="calypso:Identifiers"/>
+									<xsd:element name="volatilitySurface" type="calypso:Identifiers"/>
+									<xsd:element name="correlationSurface" type="calypso:Identifiers"/>
+								</xsd:choice>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="curveRepo" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:choice>
+									<xsd:element name="product" type="calypso:Identifiers"/>
+									<xsd:sequence>
+										<xsd:element name="productType" type="calypso:DomainValueIdentifier"/>
+										<xsd:element name="productExtendedType" type="calypso:DomainValueIdentifier"/>
+										<xsd:element name="productSubType" type="calypso:DomainValueIdentifier"/>
+									</xsd:sequence>
+								</xsd:choice>
+								<xsd:element name="curve" type="calypso:Identifiers"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="discountZeroCurve" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="currency" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="productType" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="productExtendedType" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="productSubType" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="indexName" type="calypso:Identifiers"/>
+								<xsd:element name="tenor" type="xsd:string" minOccurs="0"/>
+								<xsd:element name="curve" type="calypso:Identifiers"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="forecastZeroCurve" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="currency" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="productType" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="productExtendedType" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="productSubType" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="indexName" type="calypso:Identifiers"/>
+								<xsd:element name="tenor" type="xsd:string" minOccurs="0"/>
+								<xsd:element name="curve" type="calypso:Identifiers"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="fxMarketDataItem" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="usage" type="calypso:DomainValue"/>
+								<xsd:element name="baseCurrency" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="quoteCurrency" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="productType" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="productExtendedType" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="productSubType" type="calypso:DomainValueIdentifier"/>
+								<xsd:choice>
+									<xsd:element name="curve" type="calypso:Identifiers"/>
+									<xsd:element name="surface" type="calypso:Identifiers"/>
+								</xsd:choice>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="pricer" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="productType" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="productSubType" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="productExtType" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="pricer" type="calypso:DomainValueIdentifier"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="marketDataItem" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="usage" type="calypso:DomainValueIdentifier"/>
+								<xsd:choice>
+									<xsd:sequence>
+										<xsd:element name="currency" type="calypso:DomainValueIdentifier"/>
+										<xsd:element name="productType" type="calypso:DomainValueIdentifier"/>
+										<xsd:element name="productExtendedType" type="calypso:DomainValueIdentifier"/>
+										<xsd:element name="productSubType" type="calypso:DomainValueIdentifier"/>
+										<xsd:element name="customKeyword" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+									</xsd:sequence>
+									<xsd:element name="product" type="calypso:Identifiers"/>
+								</xsd:choice>
+								<xsd:element name="pricerType" type="calypso:DomainValueIdentifier" minOccurs="0"/>
+								<xsd:choice>
+									<xsd:element name="curve" type="calypso:Identifiers"/>
+									<xsd:element name="volatilitySurface" type="calypso:Identifiers"/>
+									<xsd:element name="correlationSurface" type="calypso:Identifiers"/>
+								</xsd:choice>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="surface" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="currency" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="usage" type="calypso:DomainValueIdentifier"/>
+								<xsd:choice>
+									<xsd:sequence>
+										<xsd:element name="indexName" type="calypso:Identifiers"/>
+										<xsd:element name="tenor" type="xsd:string"/>
+										<xsd:element name="productType" type="calypso:DomainValueIdentifier"/>
+										<xsd:element name="productExtendedType" type="calypso:DomainValueIdentifier"/>
+										<xsd:element name="productSubType" type="calypso:DomainValueIdentifier"/>
+									</xsd:sequence>
+									<xsd:sequence>
+										<xsd:element name="product" type="calypso:Identifiers" minOccurs="0"/>
+										<xsd:element name="volatilityType" type="calypso:DomainValueIdentifier"/>
+									</xsd:sequence>
+								</xsd:choice>
+								<xsd:element name="putCall" type="xsd:string"/>
+								<xsd:element name="surface" type="calypso:Identifiers"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="pricer" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="parameterName" type="calypso:DomainValue"/>
+								<xsd:choice>
+									<xsd:element name="parameterValue" type="xsd:anyType"/>
+									<xsd:element name="parameterBoolean" type="xsd:boolean"/>
+									<xsd:element name="parameterString" type="xsd:string"/>
+									<xsd:element name="parameterInteger" type="xsd:integer"/>
+									<xsd:element name="parameterDouble" type="xsd:decimal"/>
+									<xsd:element name="parameterDate" type="xsd:date"/>
+								</xsd:choice>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="lazyRefresh" type="xsd:boolean" minOccurs="0"/>
+					<xsd:element name="calibratibleModels" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<!--productType-->
+								<xsd:element name="productType" type="calypso:DomainValueIdentifier"/>
+								<!--productType + '.Pricer' -->
+								<xsd:element name="pricer" type="calypso:DomainValueIdentifier"/>
+								<!--calibratibleModels-->
+								<xsd:element name="model" type="calypso:DomainValueIdentifier"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="calibrators" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<!--calibratibleModels-->
+								<xsd:element name="model" type="calypso:DomainValueIdentifier"/>
+								<!--calibrators-->
+								<xsd:element name="calibrator" type="calypso:DomainValueIdentifier"/>
+								<xsd:element name="tradeId" type="xsd:int" minOccurs="0"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="PricerMeasure">
+		<xsd:complexContent>
+			<xsd:extension base="calypso:Object">
+				<xsd:sequence>
+					<xsd:element name="id" type="xsd:int"/>
+					<xsd:element name="measure" type="xsd:string"/>
+					<xsd:element name="comment" type="xsd:string"/>
+					<xsd:element name="className" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="TTMRate">
+		<xsd:complexContent>
+			<xsd:extension base="calypso:IdentifiedObject">
+				<xsd:sequence>
+					<xsd:element name="type" type="xsd:string"/>
+					<!--<xsd:element name="principalCurrency" type="xsd:string"/>
+					<xsd:element name="quotingCurrency" type="xsd:string"/>
+					-->
+					<xsd:element name="currencyPair" type="calypso:Identifiers"/>
+					<xsd:element name="timDate" type="xsd:date"/>
+					<xsd:element name="bid" type="xsd:double"/>
+					<xsd:element name="ask" type="xsd:double"/>
+					<xsd:element name="mismatchPts1" type="xsd:double"/>
+					<xsd:element name="mismatchPts2" type="xsd:double"/>
+					<xsd:element name="userName" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="CreditRating">
+		<xsd:complexContent>
+			<xsd:extension base="calypso:Object">
+				<xsd:sequence>
+					<xsd:element name="agency" type="calypso:DomainValue"/>
+					<xsd:element name="date" type="xsd:date"/>
+					<xsd:element name="legalEntity" type="calypso:LegalEntityIdentifiers"/>
+					<xsd:element name="debtSeniority" type="calypso:DomainValue"/>
+					<xsd:element name="ratingType" type="calypso:DomainValue"/>
+					<xsd:element name="ratingValue" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="CommodityOptionVolType">
+		<xsd:complexContent>
+			<xsd:extension base="calypso:IdentifiedObject">
+				<xsd:sequence>
+					<xsd:element name="optionType" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="delta" type="xsd:int" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="BetaValue">
+		<xsd:complexContent>
+			<xsd:extension base="calypso:Object">
+				<xsd:sequence>
+					<xsd:element name="referenceQuoteName" type="xsd:string"/>
+					<xsd:element name="assetQuoteName" type="xsd:string"/>
+					<xsd:element name="betaDate" type="xsd:date"/>
+					<xsd:element name="betaValue" type="xsd:double"/>
+					<xsd:element name="specificVol" type="xsd:double"/>
+					<xsd:element name="rSquared" type="xsd:double"/>
+					<xsd:element name="stdDev" type="xsd:double"/>
+					<xsd:element name="useMethod" type="xsd:int"/>
+					<xsd:element name="specificRisk" type="xsd:int"/>
+					<xsd:element name="dataSource" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+</xsd:schema>

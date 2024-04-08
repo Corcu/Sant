@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inheritJdk="true">
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<lib name="custom-client-crt-1.0.0-SNAPSHOT_DEV8_CERTA.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/custom-client-core/src-core/main/resources/custom-client-crt-1.0.0-SNAPSHOT_DEV8_CERTA.jar!/"/>
+	</lib>
+	<lib name="com.ibm.mq.allclient-9.3.2.0.jar" scope="COMPILE">
+		<srcroot url="jar://$MODULE_DIR$/../../../client/lib/com.ibm.mq.allclient-9.3.2.0.jar!/"/>
+	</lib>
+	<levels>
+		<level name="custom-client-crt-1.0.0-SNAPSHOT (4)" value="project"/>
+	</levels>
+</component>

@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2006 sp2 U (http://www.altova.com) by Jerome Thibaud (private) -->
+<!--
+ * Copyright (c) 2000 by Calypso Technology, Inc. 595 Market Street, Suite 1980,
+ * San Francisco, CA 94105, U.S.A. All rights reserved.
+ * 
+ * This software is the confidential and proprietary information of Calypso
+ * Technology, Inc. ("Confidential Information"). You shall not disclose such
+ * Confidential Information and shall use it only in accordance with the terms
+ * of the license agreement you entered into with Calypso Technology.
+ -->
+<xsd:schema xmlns:calypso="http://www.calypso.com/xml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.calypso.com/xml" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xsd:include schemaLocation="calypso-base.xsd"/>
+	<xsd:complexType name="Adjustment">
+		<xsd:sequence>
+			<xsd:element name="name" type="calypso:Name"/>
+			<xsd:element name="value" type="xsd:decimal"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="DateAdjustment">
+		<xsd:annotation>
+			<xsd:documentation>
+			The type that describes how a Date is adjusted.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="days" type="xsd:int"/>
+			<xsd:element name="business" type="xsd:boolean"/>
+			<xsd:element name="holidays" type="calypso:Identifiers" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="dateRoll" type="calypso:DomainValue" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="Rounding">
+		<xsd:annotation>
+			<xsd:documentation>
+			Defines the Rounding enumeration.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="NEAREST"/>
+			<xsd:enumeration value="UP"/>
+			<xsd:enumeration value="DOWN"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="Amount">
+		<xsd:sequence>
+			<xsd:element name="quantity" type="xsd:decimal"/>			
+			<xsd:choice>
+				<xsd:element name="currencyId" type="calypso:DomainValueIdentifier" minOccurs="0"/>
+				<xsd:element name="currency" type="xsd:string" />
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Payment">
+		<xsd:sequence>
+			<xsd:element name="amount" type="calypso:Amount"/>
+			<xsd:element name="date" type="xsd:date"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Attribute">
+		<xsd:sequence>
+			<xsd:element name="name" type="calypso:DomainValue">
+				<xsd:annotation>
+					<xsd:documentation>
+					The name of the attribute.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="value" type="xsd:anySimpleType">
+				<xsd:annotation>
+					<xsd:documentation>
+					The value of the attribute.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="DomainValueAttribute">
+		<xsd:sequence>
+			<xsd:element name="name" type="calypso:DomainValueIdentifier" />
+			<xsd:choice>
+				<xsd:element name="identifierValue" type="calypso:DomainValueIdentifier" />
+				<xsd:element name="stringValue" type="xsd:string" />
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PutCallDate">
+		<xsd:annotation>
+			<xsd:documentation>Representation of a PutCallDate object.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="optionType" type="calypso:DomainValue"/>
+			<xsd:element name="exerciseType" type="calypso:DomainValue"/>
+			<xsd:element name="settlementType" type="calypso:DomainValue" minOccurs="0"/>
+			<xsd:element name="firstExerciseDate" type="xsd:date" minOccurs="0"/>
+			<xsd:element name="deliveryDate" type="xsd:date" minOccurs="0"/>
+			<xsd:element name="expiryDate" type="xsd:date"/>
+			<xsd:element name="barrierStartDate" type="xsd:date" minOccurs="0"/>
+			<xsd:element name="barrierEndDate" type="xsd:date" minOccurs="0"/>
+			<xsd:element name="premium" type="xsd:decimal"/>
+			<xsd:element name="premiumPercentage" type="xsd:decimal"/>
+			<xsd:element name="isPremiumPercentage" type="xsd:boolean"/>
+			<xsd:element name="price" type="xsd:decimal"/>
+			<xsd:element name="accrual" type="xsd:decimal"/>
+			<xsd:element name="position" type="xsd:int"/>
+			<xsd:element name="autoExercise" type="xsd:boolean"/>
+			<xsd:element name="exercised" type="xsd:boolean"/>
+			<xsd:element name="percentageOfFace" type="xsd:decimal"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PayoutFormula">
+		<xsd:sequence>
+			<xsd:element name="type" type="xsd:string"/>
+			<xsd:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="name" type="xsd:string"/>
+						<xsd:element name="value" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ProductReset">
+		<xsd:sequence>
+			<xsd:element name="quoteName" type="calypso:Name"/>
+			<xsd:element name="quoteType" type="calypso:DomainValue"/>
+			<xsd:element name="amount" type="xsd:decimal" minOccurs="0"/>
+			<xsd:element name="quoteDate" type="xsd:date"/>
+			<xsd:element name="interestCleanUp" type="xsd:boolean"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Rate">
+		<xsd:sequence>
+			<xsd:element name="value" type="xsd:decimal"/>
+			<xsd:element name="decimals" type="xsd:integer"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ResetSampleDate">
+		<xsd:sequence>
+			<xsd:element name="rate" type="xsd:decimal"/>
+			<xsd:element name="rateIndex" type="calypso:Identifiers"/>
+			<xsd:element name="sampleDate" type="xsd:date"/>
+			<xsd:element name="sampleWeight" type="xsd:decimal"/>
+			<xsd:element name="projectedRate" type="xsd:decimal"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="FXResetSampleDate">
+		<xsd:sequence>
+			<xsd:element name="rate" type="xsd:decimal"/>
+			<xsd:element name="fxReset" type="calypso:Identifiers"/>
+			<xsd:element name="sampleDate" type="xsd:date"/>
+			<xsd:element name="sampleWeight" type="xsd:decimal"/>
+			<xsd:element name="projectedRate" type="xsd:decimal"/>
+			<xsd:element name="manualReset" type="xsd:boolean"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ProductExchangeCode">
+		<xsd:sequence>
+			<xsd:element name="legalEntity" type="calypso:LegalEntityIdentifiers"/>
+			<xsd:element name="identifier" type="calypso:Identifier" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Dividend">
+		<xsd:sequence>
+			<xsd:element name="id" type="xsd:integer"/>
+			<xsd:element name="declaredDate" type="xsd:date"/>
+			<xsd:element name="recordDate" type="xsd:date"/>
+			<xsd:element name="paymentDate" type="xsd:date"/>
+			<xsd:element name="exDividendDate" type="xsd:date"/>
+			<xsd:element name="amount" type="xsd:decimal"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="CreditDefinition">
+		<xsd:sequence>
+			<xsd:sequence minOccurs="0">
+				<xsd:element name="legalEntity" type="calypso:LegalEntityIdentifiers"/>
+				<xsd:element name="debtSeniority" type="calypso:DomainValue"/>
+			</xsd:sequence>
+			<xsd:element name="ticker" type="calypso:Identifiers" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ScheduleParams">
+		<xsd:sequence>
+			<xsd:element name="holidays" type="calypso:Identifiers" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="dateRoll" type="calypso:DomainValue"/>
+			<xsd:element name="frequency" type="calypso:DomainValue" minOccurs="0"/>
+			<xsd:element name="offsetBusDay" type="xsd:boolean"/>
+			<xsd:element name="customRollingDay" type="xsd:boolean"/>
+			<xsd:element name="rollingDay" type="xsd:integer"/>
+			<xsd:element name="periodRule" type="calypso:DomainValue" minOccurs="0"/>
+			<xsd:element name="stubRule" type="calypso:DomainValue" minOccurs="0"/>
+			<xsd:element name="firstStubDate" type="xsd:date" minOccurs="0"/>
+			<xsd:element name="lastStubDate" type="xsd:date" minOccurs="0"/>
+			<xsd:element name="offset" type="xsd:integer"/>
+			<xsd:element name="version" type="xsd:integer"/>
+			<xsd:element name="defaultOffset" type="xsd:boolean"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Deliverable">
+		<xsd:sequence>
+			<xsd:element name="amount" type="xsd:decimal"/>
+			<xsd:element name="id" type="xsd:integer"/>
+			<xsd:element name="productId" type="xsd:integer"/>
+			<xsd:element name="product" type="xsd:boolean"/>
+			<xsd:element name="feeType" type="calypso:DomainValue" minOccurs="0"/>
+			<xsd:element name="receive" type="xsd:boolean"/>
+			<xsd:element name="calcOffset" type="xsd:integer"/>
+			<xsd:element name="calcBusDay" type="xsd:boolean"/>
+			<xsd:element name="calcHolidays" type="calypso:Identifiers" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="description" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="date" type="xsd:date" minOccurs="0"/>
+			<xsd:element name="type" type="calypso:DomainValue"/>
+			<xsd:element name="currency" type="calypso:CurrencyCode"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="StaticDataFilter">
+		<xsd:complexContent>
+			<xsd:extension base="calypso:Object">
+				<xsd:sequence>
+					<xsd:element name="name" type="xsd:string"/>
+					<xsd:element name="comment" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="groups" type="calypso:DomainValueIdentifier" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>StaticDataFilter.setGroups(). If not defined, Group=ANY</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="elements" type="calypso:StaticDataFilterElement" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="StaticDataFilterElement">
+		<xsd:sequence>
+			<xsd:element name="name" type="xsd:string"/>
+			<xsd:element name="type" type="calypso:DomainValue"/>
+			<xsd:element name="stringValue" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="minValue" type="xsd:anyType" minOccurs="0"/>
+			<xsd:element name="maxValue" type="xsd:anyType" minOccurs="0"/>
+			<xsd:element name="booleanValue" type="xsd:boolean"/>
+			<xsd:element name="likeValue" type="xsd:string" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="EventTypeAction">
+		<xsd:sequence>
+			<xsd:element name="source" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="amount" type="xsd:decimal"/>
+			<xsd:element name="internalReference" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="externalReference" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="actionType" type="calypso:DomainValue"/>
+			<xsd:element name="effectiveDate" type="xsd:date"/>
+			<xsd:element name="actionDate" type="xsd:date"/>
+			<xsd:element name="cancelled" type="xsd:boolean"/>
+			<xsd:element name="collateral" type="calypso:Identifiers" minOccurs="0"/>
+			<xsd:element name="collateralAmount" type="xsd:decimal"/>
+			<xsd:element name="deliveryType" type="calypso:DomainValue"/>
+			<xsd:element name="feeAdjustment" type="xsd:decimal"/>
+			<xsd:element name="actionPrice" type="xsd:decimal"/>
+			<xsd:element name="collateralPrice" type="xsd:decimal"/>
+			<xsd:element name="tradeVersion" type="xsd:integer"/>
+			<xsd:element name="interestCleanup" type="xsd:boolean"/>
+			<xsd:element name="creationDate" type="xsd:dateTime"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Term">
+		<xsd:choice>
+			<xsd:element name="tenor" type="calypso:DomainValue"/>
+			<xsd:element name="date" type="xsd:date"/>
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:complexType name="IndexFactor">
+		<xsd:sequence>
+			<xsd:element name="rateIndex" type="xsd:string"/>
+			<xsd:element name="factor" type="xsd:decimal"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="RateSchedule">
+		<xsd:sequence>
+			<xsd:element name="startDate" type="xsd:date"/>
+			<xsd:element name="endDate" type="xsd:date"/>
+			<xsd:element name="dayCount" type="calypso:DomainValue"/>
+			<xsd:element name="constant" type="xsd:decimal"/>
+			<xsd:element name="floor" type="xsd:decimal"  minOccurs="0"/>
+			<xsd:element name="cap" type="xsd:decimal"  minOccurs="0"/>
+			<xsd:element name="indexFactor" type="calypso:IndexFactor" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="AccretionIndex">
+		<xsd:sequence>
+			<xsd:element name="rateIndex" type="calypso:Identifiers"/>
+			<xsd:element name="defaultResetB" type="xsd:boolean" default="false"/>
+			<xsd:element name="resetLag" type="xsd:int"/>
+			<xsd:element name="resetLagBusDayB" type="xsd:boolean" default="false"/>
+			<xsd:element name="resetLagHoliday" type="calypso:Identifiers" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="resetTiming" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Amortization">
+		<xsd:annotation>
+			<xsd:documentation>
+			Common type for all amortization types. Sub-types will define the parameters required for specific types.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="principalStructure" type="calypso:DomainValue" default="BULLET"/>
+			<!-- BZ 47575 used to determine between sinkers and amortisers -->
+			<xsd:element name="sinkingFaceValue" type="xsd:boolean" default="false"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="AnnuityAmortization">
+		<xsd:complexContent>
+			<xsd:extension base="calypso:Amortization">
+				<xsd:sequence>
+					<xsd:element name="baseAmount" type="xsd:decimal"/>
+					<xsd:element name="startTerm" type="calypso:Term" minOccurs="0"/>
+					<xsd:element name="endTerm" type="calypso:Term" minOccurs="0"/>
+					<xsd:element name="rate" type="xsd:decimal"/>
+					<xsd:element name="frequency" type="calypso:DomainValue"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="EqualAmortization">
+		<xsd:complexContent>
+			<xsd:extension base="calypso:Amortization">
+				<xsd:sequence>
+					<xsd:element name="baseAmount" type="xsd:decimal"/>
+					<xsd:element name="startDate" type="xsd:date" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>when not provided, the trade start date will be used instead</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="endDate" type="xsd:date" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>when not provided the trade maturity date will be used instead</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="frequency" type="calypso:DomainValue"/>
+					<xsd:element name="term" type="calypso:Term" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MortgageAmortization">
+		<xsd:complexContent>
+			<xsd:extension base="calypso:Amortization">
+				<xsd:sequence>
+					<xsd:element name="startDate" type="xsd:date" minOccurs="0"/>
+					<xsd:element name="endDate" type="xsd:date" minOccurs="0"/>
+					<xsd:element name="term" type="calypso:Term" minOccurs="0"/>
+					<xsd:element name="frequency" type="calypso:DomainValue" minOccurs="0"/>
+					<xsd:choice minOccurs="0">
+						<xsd:element name="totalPayment" type="xsd:decimal"/>
+						<xsd:sequence>
+							<xsd:element name="dayCount" type="calypso:DomainValue"/>
+							<xsd:element name="periodRule" type="calypso:DomainValue"/>
+							<xsd:element name="customRate" type="xsd:decimal" minOccurs="0"/>
+						</xsd:sequence>
+					</xsd:choice>
+					<xsd:element name="roundToAmount" type="xsd:decimal"/>
+					<xsd:element name="roundingOption" type="calypso:DomainValue"/>
+					<xsd:element name="roundPrincipalOnly" type="xsd:boolean"/>
+					<xsd:element name="residual" type="xsd:decimal"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="ScheduleAmortization">
+		<xsd:complexContent>
+			<xsd:extension base="calypso:Amortization">
+				<xsd:sequence>
+					<xsd:sequence minOccurs="0">
+						<xsd:element name="scheduleStartDate" type="xsd:date"/>
+						<xsd:element name="scheduleEndDate" type="xsd:date"/>
+						<xsd:element name="scheduleFrequency" type="calypso:DomainValue"/>
+						<xsd:element name="scheduleDateRule" type="calypso:DomainValue"/>
+						<xsd:element name="tolerance" type="xsd:int" minOccurs="0"/>
+					</xsd:sequence>
+					<xsd:element name="amortizationPayment" type="calypso:Payment" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>	
+	<xsd:complexType name="AccretingAmortization">
+		<xsd:complexContent>
+			<xsd:extension base="calypso:Amortization">
+				<xsd:sequence>
+					<xsd:sequence minOccurs="0">
+						<xsd:element name="dayCount" type="calypso:DomainValue"/>
+						<xsd:element name="scheduleStartDate" type="xsd:date"/>
+						<xsd:element name="scheduleEndDate" type="xsd:date"/>
+						<xsd:element name="scheduleFrequency" type="calypso:DomainValue"/>
+						<xsd:element name="scheduleDateRule" type="calypso:DomainValue"/>
+						<xsd:element name="tolerance" type="xsd:int" minOccurs="0"/>
+					</xsd:sequence>
+					<xsd:element name="accretionSchedule" type="calypso:RateSchedule" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="accretionIndex" type="calypso:AccretionIndex" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="StepDownAmortization">
+		<xsd:complexContent>
+			<xsd:extension base="calypso:Amortization">
+				<xsd:sequence>
+					<xsd:element name="baseAmount" type="xsd:decimal"/>
+					<xsd:element name="startDate" type="xsd:date" minOccurs="0"/>
+					<xsd:element name="endDate" type="xsd:date" minOccurs="0"/>
+					<xsd:element name="frequency" type="calypso:DomainValue"/>
+					<xsd:element name="increment" type="xsd:decimal"/>
+					<xsd:element name="operator" type="xsd:int"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="Code">
+		<xsd:sequence>
+			<xsd:element name="name" type="xsd:string"/>
+			<xsd:element name="value" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="CouponDate">
+		<xsd:sequence>
+			<xsd:element name="date" type="xsd:date"/>
+			<xsd:element name="rate" type="xsd:decimal"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="FilterSet">
+		<xsd:complexContent>
+			<xsd:extension base="calypso:Object">
+				<xsd:sequence>
+					<xsd:element name="name" type="xsd:string"/>
+					<xsd:element name="comment" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="filterElement" type="calypso:FilterElement" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="FilterElement">
+		<xsd:sequence>
+			<xsd:element name="name" type="xsd:string"/>
+			<xsd:element name="value" type="xsd:anyType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="type" type="calypso:DomainValue"/>
+			<xsd:element name="minValue" type="xsd:anyType" minOccurs="0"/>
+			<xsd:element name="maxValue" type="xsd:anyType" minOccurs="0"/>
+			<xsd:element name="likeValue" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="isValue" type="xsd:boolean" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Audit">
+		<xsd:sequence>
+			<xsd:element name="enteredBy" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="dateEntered" type="xsd:dateTime" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PoolFactorScheduleEntry">
+		<xsd:sequence>
+			<xsd:element name="date" type="xsd:date"/>
+			<xsd:element name="poolFactorEntry" type="calypso:PoolFactorEntry"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PoolFactorEntry">
+		<xsd:sequence>
+			<xsd:element name="effectiveDate" type="xsd:date"/>
+			<xsd:element name="poolFactor" type="xsd:decimal"/>
+			<xsd:element name="coupon" type="xsd:decimal"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PercentAllocRuleElement">
+		<xsd:sequence>
+			<xsd:element name="ruleId" type="xsd:int"/>
+			<xsd:element name="ruleElementId" type="xsd:int"/>
+			<xsd:element name="leRole" type="xsd:string"/>
+			<xsd:element name="percent" type="xsd:decimal"/>
+			<xsd:element name="legalEntity" type="calypso:Identifiers"/>
+			<xsd:element name="book" type="calypso:Identifiers"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+		<xsd:complexType name="ProductSubtype">
+		<xsd:sequence>
+			<xsd:element name="productType" type="calypso:DomainValueIdentifier" />
+			<xsd:element name="productSubtype" type="calypso:DomainValueIdentifier" />
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

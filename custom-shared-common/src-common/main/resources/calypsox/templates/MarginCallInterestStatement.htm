@@ -1,0 +1,69 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<link rel="stylesheet" href="marginCallNotif.css" type="text/css"
+	media="screen,print">
+</head>
+<body style="width: 750;">
+	<!--calypso>include "header.htm";</calypso-->
+	<!--calypso>include "footer.htm";</calypso-->
+	<span class="normal"> 
+	
+	<!--calypso>
+		if (|CONTRACT_TYPE|=="CGAR") 
+		inline "
+			<br> Con referencia con contrato |CONTRACT_TYPE|  y sus provisiones de  Garant&iacute;as  asociados desde |CONTRACT_OPENDATE|, 
+			(el "Acuerdo") entre |SENDER_FULL_NAME| y |RECEIVER_FULL_NAME|  ("Contrapartida"), 
+			en ocasiones ratificado; por la presente confirmamos el aviso de los intereses devengados sobre el monto principal del balance Transferido / Recibido. </span>
+		";
+		else inline "
+			|POLITE|<br>
+			<br> Pursuant to the |CONTRACT_AGREEMENT| and its collateral related provisions dated as of |CONTRACT_OPENDATE|, (the
+			"Agreement") between |SENDER_FULL_NAME| and |RECEIVER_FULL_NAME|
+			("Counterparty") as amended from time to time, we hereby confirm
+			notice of the interest accrued on the principal amount of the Balance
+			Transferred / Received. </span>
+		";
+	</calypso-->
+
+	<div class="titleSmaller">
+		<br>
+			<!--calypso>
+			if (|CONTRACT_TYPE|=="CGAR") 
+			inline "
+				<b>Acuerdo |AGREEMENT_NAME| - |INTEREST_RATE|</b>
+				<br> 
+				<b>Per&iacute;odo desde INTEREST_START_DATE| to |INTEREST_END_DATE|</b>
+			";
+			else inline "
+				<b>Agreement |AGREEMENT_NAME| - |INTEREST_RATE|</b>
+				<br> 
+				<b>Period from |INTEREST_START_DATE| to |INTEREST_END_DATE|</b>
+			";
+			</calypso-->
+		<br>
+		<br>	
+	</div>
+	|STATEMENT_DETAILS|
+	<p>
+
+		<span class="normal">
+		
+		<!--calypso>
+			if (|CONTRACT_TYPE|=="CGAR")
+		    inline "
+					En caso de presentarse alguna duda o comentario sobre lo anterior, favor de contactarnos
+			";
+			else inline "
+					Should you have any questions please do	not hesitate to contact us.</br> Kind Regards,
+			";
+   		</calypso-->		
+		
+		</span>
+	<!--calypso>
+    if (|MC_PROCESSING_ORG|==|PO_SOVEREIGN|)
+    inline "|SETTLEMENT_INSTRUCTIONS_ABA_CODE|";
+    else inline "|SETTLEMENT_INSTRUCTIONS|";
+	</calypso-->
+</body>
+</html>

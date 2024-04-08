@@ -1,0 +1,6 @@
+package calypsox.apps.reporting;
+
+import com.calypso.apps.reporting.MarginCallPositionValuationReportTemplatePanel;
+
+public class SantMCallPositionValCreReportTemplatePanel extends MarginCallPositionValuationReportTemplatePanel {
+}

@@ -1,0 +1,58 @@
+apply plugin: 'calypso-java-project'
+
+evaluationDependsOn ":engineserver"
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+
+jar {
+  manifest {
+    attributes(
+      'JAR_COMPILATION_DATE': System.getenv('COMPILATION_DATE'),
+      'JAR_GIT_BRANCH_NAME': System.getenv('GIT_BRANCH'),
+      'JAR_RELEASE_NAME': System.getenv('RELEASE'),
+      'JAR_SETTINGS_GRADLE': System.getenv('PROJECT')
+    )
+  }
+}
+
+dependencies {
+	compile project(':custom-shared-common')
+	provided project(":engineserver")
+	compile fileTree(dir: '../../../client/lib', exclude: 'custom-*.jar', include: '*.jar')
+  	compile fileTree(dir: "../../../jboss", include: 'jboss-eap-*/modules/system/layers/base/org/picketbox/main/picketbox-*.jar')
+	compile fileTree(dir: 'src-common/calypso/jars', include: '**/*.jar')
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs = ['src-common/main/java']
+		}
+		resources {
+            srcDirs= ['src-common/main/resources']
+        }
+	}
+}
+
+ext.deployment="engineserver"
+
+// TO ADD EXTERNAL RESOURCES
+// THIS CAN BE DONE FOR ANY SUBPROJECT
+//dependencies {
+//	externalResources files("/path/to/directory",
+//				"/path/to/file.xml",
+//				"relative/path/to/file.xml")
+//}
+
+// TO ADD A DEPENDENCY
+//repositories {
+//	mavenCentral()
+//}
+
+//dependencies {
+//	includeInDistribution "commons-io:commons-io:2.4"
+//includeInDistribution "dir: 'src-core/calypso/jars', include: '**/*.jar'"
+//}

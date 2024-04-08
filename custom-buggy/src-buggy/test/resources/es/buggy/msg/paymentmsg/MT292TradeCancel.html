@@ -1,0 +1,613 @@
+<html 
+	xmlns:concordion="http://www.concordion.org/2007/concordion" 
+	xmlns:ext="urn:concordion-extensions:2010">
+
+	<head>
+		<title>Generación de Mensajes MTx92 por Cancelación de Depósito</title>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+		<script>
+	            function showMessage(elementId) {
+		            var x = document.getElementById(elementId);
+		            if (x.style.display === "none") {
+		                x.style.display = "block";
+		            } else {
+		                x.style.display = "none";
+		            }
+	            }
+	    </script>
+	</head>
+	
+	<body>
+	
+		<h1>Generación de Mensajes MTx92 por Cancelación de Depósito</h1>
+	
+		<h2>Descripción</h2>
+	
+		<p>
+			La cancelación de mensajes de liquidación, surge cuando un Trade, que generó algún mensaje 
+			de pago, que habiendo sido enviado, sufre alguna Cancelación. 
+			Cuando esto ocurre, Calypso genera un mensaje de cancelación de pago MTx92 
+			que sirve para realizar la reclamación de los fondos liquidados originalmente.
+		</p>
+		<p>
+			Insertamos una operacion y completamos el ciclo de Liquidacion hasta llevar el mensaje de pago 
+			a estado ACKED. Después Cancelamos la Operacion y comprobamos que manteniendo el mensaje de pago en ACKED, 
+			se genera un nuevo Mensaje Mtx92 en estado VERIFIED.
+		</p>
+
+		<h2>Datos de Referencia</h2>
+
+		<p>
+			Insertar una nueva operacion de Depósito Cash mediante la acción
+			<span concordion:execute="setProperty('ACTION', #TEXT)">NEW</span>,
+			con external reference
+			<span concordion:echo="#extRef=generateExternalRef()"> </span>  
+			<span concordion:execute="setProperty('EXTERNAL_REFERENCE', #extRef)"> </span>
+			y con contrapartida 
+			<span concordion:execute="setProperty('CPTY', #TEXT)">AAT_TELCO</span>.
+		</p>
+			
+	
+		<h2>Proceso de Prueba</h2>
+
+		<p>
+			Utilizaremos el template 
+			<span concordion:set="#template">Cash.xml</span>        	
+			para  
+			<span concordion:execute="#tradeId=importCMLTrade(#template)">insertar</span>
+			la operación.
+		</p>
+
+		<p>
+			El trade insertado es:
+			<span style="visibility: hidden;" concordion:set="#img">CancelTradeReversal.png</span>
+			<span ext:embed="getImage(#img)"> </span>
+		</p>
+		
+		<p>
+			Comprobamos los datos financieros de la operación en la tabla:
+		</p>
+		<table concordion:execute="#trade=getTrade(#tradeId)">
+			<tr>
+				<th concordion:echo="#trade.id">Trade id</th>
+				<th concordion:assertEquals="#trade.productType">Product Type</th>
+				<th concordion:assertEquals="#trade.status">Status</th>
+				<th concordion:assertEquals="#trade.tradeDate">Trade Date</th>
+				<th concordion:assertEquals="#trade.settleDate">Settle Date</th>
+                <th concordion:assertEquals="#trade.principalAmount">Primary Amount</th>  
+			</tr>
+			<tr>
+				<td></td>
+				<td>Cash</td>
+				<td>VERIFIED</td>
+				<td>31/05/16 09:00:00.000 o'clock CEST</td>
+				<td>02/06/2016</td>
+				<td>-1,000,000.00 USD</td>
+			</tr>
+		</table>
+			
+		<p>
+			Esperamos hasta que el <span concordion:set="#engine">TransferEngine</span>
+			(<span concordion:echo="waitForEngine(#engine)"> </span>
+			eventos pendientes)	procese todos sus eventos pendientes	
+		</p>
+		
+		<p>
+			Comprobamos las liquidaciones del Deposito, existen solo dos por los principales:
+		</p>
+		<table concordion:verifyRows="#transfer : getNettedTransfers(#trade)">
+			<tr>
+				<th concordion:echo="#transfer.id">Id</th>
+				<th concordion:assertEquals="#transfer.settlementMethod">Settle Method</th>
+				<th concordion:assertEquals="#transfer.settlementAmount">Amount</th>
+				<th concordion:assertEquals="#transfer.eventType">Event Type</th>
+				<th concordion:assertEquals="#transfer.status">Status</th>
+				<th concordion:assertEquals="#transfer.valueDate">Value Date</th>
+				<th concordion:assertEquals="#transfer.nettingType">Netting Type</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td>SWIFT</td>
+				<td>1,000,000.00 USD</td>
+				<td>PAYMENT</td>
+				<td>VERIFIED</td>
+				<td>02/06/2016</td>
+				<td>None</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>SWIFT</td>
+				<td>48,688.89 USD</td>
+				<td>RECEIPT</td>
+				<td>VERIFIED</td>
+				<td>02/06/2022</td>
+				<td>None</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>SWIFT</td>
+				<td>1,000,000.00 USD</td>
+				<td>RECEIPT</td>
+				<td>VERIFIED</td>
+				<td>02/06/2022</td>
+				<td>None</td>
+			</tr>			
+		</table>
+
+		<p>
+			Esperamos hasta que Calypso genera los Mensajes comprobando que el 
+			<span concordion:set="#engine">MessageEngine</span> no tenga eventos pendientes.
+			(<span concordion:echo="waitForEngine(#engine)"> </span> eventos pendientes)		
+		</p>
+	
+		<p>
+			Por la liquidación del año 2022, se genera un mensaje <span concordion:set="#templateName">MT210</span>
+ 			resultante, utilizando el pricing environment <span concordion:set="#pricingEnv">OFFICIAL-MAD</span> que 
+ 			se queda detenido en estado VERIFIED por el KickOff de USD:
+ 		</p>
+ 		
+ 		<span concordion:execute="#msgs = getMessagesByEventTypesOrderedByTransferAmount(#trade, {'VERIFIED_RECEIPT'})"> </span>
+ 		<table concordion:verifyRows="#msg : #msgs">
+			<tr>
+				<th concordion:echo="#msg.id">Id</th>
+				<th concordion:assertEquals="#msg.templateName">Plantilla del mensaje</th>
+				<th concordion:assertEquals="#msg.eventType">Tipo de Evento</th>
+				<th concordion:echo="#msg.transfer">Transfer</th>
+				<th concordion:assertEquals="#msg.transfer.settlementAmount">Transfer Sellement Amount</th>
+				<th concordion:assertEquals="#msg.status">Estado</th>
+				<th concordion:assertEquals="#msg.subAction">Sub Action</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td>MT210</td>
+				<td>VERIFIED_RECEIPT</td>
+				<td></td>
+				<td>48,688.89 USD</td>
+				<td>VERIFIED</td>
+				<td>NONE</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>MT210</td>
+				<td>VERIFIED_RECEIPT</td>
+				<td></td>
+				<td>1,000,000.00 USD</td>
+				<td>VERIFIED</td>
+				<td>NONE</td>
+			</tr>
+		</table>
+
+		<p>Ahora comprobamos las etiquetas de cada mensaje swift</p>
+
+		<!-- primer mensaje -->
+		
+		<p concordion:echo="#msg1=#msgs.get(0)"> </p>
+		<span concordion:execute="#swiftMessage=#msg1.formatSwiftDocument(#pricingEnv)"> </span>
+
+		<table>
+			<tr>
+				<th>TAG</th>
+				<th>Value</th>
+				<th>Descripción</th>
+			</tr>
+			<tr>
+				<td concordion:set="#tag">20</td>
+				<td concordion:echo="#swiftMessage.getSwiftTagValue(#tag, 1)"/>
+				<td concordion:echo="#swiftMessage.getSwiftTagName(#tag, 1)"></td>
+			</tr>
+			<tr>
+				<td concordion:set="#tag">25</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue(#tag, 1)">897987987909053</td>
+				<td concordion:echo="#swiftMessage.getSwiftTagName(#tag, 1)">Account Identification</td>
+			</tr>
+			<tr>
+				<td concordion:set="#tag">30</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue(#tag, 1)">220602</td>
+				<td concordion:echo="#swiftMessage.getSwiftTagName(#tag, 1)">Value Date</td>
+			</tr>
+			<tr>
+				<td concordion:set="#tag">21</td>
+				<td concordion:echo="#swiftMessage.getSwiftTagValue(#tag, 1)"/>
+				<td concordion:echo="#swiftMessage.getSwiftTagName(#tag, 1)">Related Reference</td>
+			</tr>
+			<tr>
+				<td concordion:set="#tag">32B</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue(#tag, 1)">USD48688,89</td>
+				<td concordion:echo="#swiftMessage.getSwiftTagName(#tag, 1)">Currency Code, Amount</td>
+			</tr>
+			<tr>
+				<td concordion:set="#tag">50F</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue(#tag, 1)">/ES40700708754390464800</td>
+				<td concordion:echo="#swiftMessage.getSwiftTagName(#tag, 1)">Ordering Institution</td>
+			</tr>
+			<tr>
+				<td concordion:set="#tag">56A</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue(#tag, 1)">AGNTEGHIJXXX</td>
+				<td concordion:echo="#swiftMessage.getSwiftTagName(#tag, 1)">Intermediary</td>
+			</tr>
+		</table>	
+		
+<button onclick="showMessage('swiftMessage')">Mostrar Mensaje Swift completo</button>	
+<pre concordion:echo="#swiftMessage.text" id="swiftMessage" style="display:none"> </pre>	
+
+		<!-- segundo mensaje -->
+
+		<p concordion:echo="#msg2=#msgs.get(1)"> </p>
+		<span concordion:execute="#swiftMessage=#msg2.formatSwiftDocument(#pricingEnv)"> </span>
+
+		<table>
+			<tr>
+				<th>TAG</th>
+				<th>Value</th>
+				<th>Descripción</th>
+			</tr>
+			<tr>
+				<td concordion:set="#tag">20</td>
+				<td concordion:echo="#swiftMessage.getSwiftTagValue(#tag, 1)"/>
+				<td concordion:echo="#swiftMessage.getSwiftTagName(#tag, 1)"></td>
+			</tr>
+			<tr>
+				<td concordion:set="#tag">25</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue(#tag, 1)">897987987909053</td>
+				<td concordion:echo="#swiftMessage.getSwiftTagName(#tag, 1)">Account Identification</td>
+			</tr>
+			<tr>
+				<td concordion:set="#tag">30</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue(#tag, 1)">220602</td>
+				<td concordion:echo="#swiftMessage.getSwiftTagName(#tag, 1)">Value Date</td>
+			</tr>
+			<tr>
+				<td concordion:set="#tag">21</td>
+				<td concordion:echo="#swiftMessage.getSwiftTagValue(#tag, 1)"/>
+				<td concordion:echo="#swiftMessage.getSwiftTagName(#tag, 1)">Related Reference</td>
+			</tr>
+			<tr>
+				<td concordion:set="#tag">32B</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue(#tag, 1)">USD1000000,</td>
+				<td concordion:echo="#swiftMessage.getSwiftTagName(#tag, 1)">Currency Code, Amount</td>
+			</tr>
+			<tr>
+				<td concordion:set="#tag">50F</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue(#tag, 1)">/ES40700708754390464800</td>
+				<td concordion:echo="#swiftMessage.getSwiftTagName(#tag, 1)">Ordering Institution</td>
+			</tr>
+			<tr>
+				<td concordion:set="#tag">56A</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue(#tag, 1)">AGNTEGHIJXXX</td>
+				<td concordion:echo="#swiftMessage.getSwiftTagName(#tag, 1)">Intermediary</td>
+			</tr>
+		</table>	
+	    
+		<p>
+			Accedemos a Calypso con un usuario de Mensajería (grupo: <span concordion:set="#group">bomsg</span>) 
+			<span concordion:execute="#userName = getUserName({#group})"> </span>
+			<span concordion:echo="#userName"> </span> 
+			y aplicamos la acción <span concordion:set="#action">MAN_TO_SEND</span>
+			<span concordion:execute="#msg1.reload()"> </span>
+			al mensaje MT210 (Id: <span concordion:echo="#msg1.id"> </span>).
+			(<span concordion:assertTrue="#msg1.applyAction(#action, #userName)">OK</span>) 
+		</p>
+		<p>
+			Comprobamos que el mensaje ha viajado al estado 
+			<span concordion:execute="#msg1.reload()"> </span>
+			<span concordion:assertEquals="#msg1.status">TO_BE_SENT</span>:
+		</p>
+		<table concordion:verifyRows="#msg : getMessagesByEventTypesOrderedByTransferAmount(#trade, {'VERIFIED_RECEIPT','VERIFIED_PAYMENT','SETTLED_RECEIPT'})">
+			<tr>
+				<th concordion:echo="#msg.id">Id</th>
+				<th concordion:assertEquals="#msg.templateName">Plantilla del mensaje</th>
+				<th concordion:assertEquals="#msg.eventType">Tipo de Evento</th>
+				<th concordion:echo="#msg.transfer">Transfer</th>
+				<th concordion:assertEquals="#msg.status">Estado</th>
+				<th concordion:assertEquals="#msg.subAction">Sub Action</th>	
+				<th concordion:echo="#msg.linkedMessage">Mensaje relacionado</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td>MT210</td>
+				<td>VERIFIED_RECEIPT</td>
+				<td></td>
+				<td>TO_BE_SENT</td>
+				<td>NONE</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>MT103</td>
+				<td>VERIFIED_PAYMENT</td>
+				<td></td>
+				<td>VERIFIED</td>
+				<td>NONE</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>MT210</td>
+				<td>VERIFIED_RECEIPT</td>
+				<td></td>
+				<td>VERIFIED</td>
+				<td>NONE</td>
+				<td></td>
+			</tr>
+		</table>
+		<p>	
+			Aplicamos la acción <span concordion:set="#action">SEND</span>
+			al mensaje MT210 (Id: <span concordion:echo="#msg1.id"> </span>). 
+			(<span concordion:assertTrue="#msg1.applyAction(#action)">OK</span>)
+			y comprobamos que el mensaje ha viajado al estado 
+			<span concordion:execute="#msg1.reload()"> </span>
+			<span concordion:assertEquals="#msg1.status">SENT</span>.
+		</p>
+		<table concordion:verifyRows="#msg : getMessagesByEventTypesOrderedByTransferAmount(#trade, {'VERIFIED_RECEIPT','VERIFIED_PAYMENT','SETTLED_RECEIPT'})">
+			<tr>
+				<th concordion:echo="#msg.id">Id</th>
+				<th concordion:assertEquals="#msg.templateName">Plantilla del mensaje</th>
+				<th concordion:assertEquals="#msg.eventType">Tipo de Evento</th>
+				<th concordion:echo="#msg.transfer">Transfer</th>
+				<th concordion:assertEquals="#msg.status">Estado</th>
+				<th concordion:assertEquals="#msg.subAction">Sub Action</th>	
+				<th concordion:echo="#msg.linkedMessage">Mensaje relacionado</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td>MT210</td>
+				<td>VERIFIED_RECEIPT</td>
+				<td></td>
+				<td>SENT</td>
+				<td>NONE</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>MT103</td>
+				<td>VERIFIED_PAYMENT</td>
+				<td></td>
+				<td>VERIFIED</td>
+				<td>NONE</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>MT210</td>
+				<td>VERIFIED_RECEIPT</td>
+				<td></td>
+				<td>VERIFIED</td>
+				<td>NONE</td>
+				<td></td>
+			</tr>
+		</table>
+		<p>
+			Aplicamos la acción <span concordion:set="#action">ACK</span>
+			al mensaje MT210 (Id: <span concordion:echo="#msg1.id"> </span>). 
+			(<span concordion:assertTrue="#msg1.applyAction(#action)">OK</span>)
+			y comprobamos que el mensaje ha viajado al estado 
+			<span concordion:execute="#msg1.reload()"> </span>
+			<span concordion:assertEquals="#msg1.status">ACKED</span>.
+		</p>
+		
+		<table concordion:verifyRows="#msg : getMessagesByEventTypesOrderedByTransferAmount(#trade, {'VERIFIED_RECEIPT','VERIFIED_PAYMENT','SETTLED_RECEIPT'})">
+			<tr>
+				<th concordion:echo="#msg.id">Id</th>
+				<th concordion:assertEquals="#msg.templateName">Plantilla del mensaje</th>
+				<th concordion:assertEquals="#msg.eventType">Tipo de Evento</th>
+				<th concordion:echo="#msg.transfer">Transfer</th>
+				<th concordion:assertEquals="#msg.status">Estado</th>
+				<th concordion:assertEquals="#msg.subAction">Sub Action</th>
+				<th concordion:echo="#msg.linkedMessage">Mensaje relacionado</th>			
+			</tr>
+			<tr>
+				<td></td>
+				<td>MT210</td>
+				<td>VERIFIED_RECEIPT</td>
+				<td></td>
+				<td>ACKED</td>
+				<td>NONE</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>MT103</td>
+				<td>VERIFIED_PAYMENT</td>
+				<td></td>
+				<td>VERIFIED</td>
+				<td>NONE</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>MT210</td>
+				<td>VERIFIED_RECEIPT</td>
+				<td></td>
+				<td>VERIFIED</td>
+				<td>NONE</td>
+				<td></td>
+			</tr>
+		</table>
+
+		<p>
+			Comprobamos en Base de Datos que los transfers relacionados con los
+			mensajes permanencen en estado VERIFIED:
+		</p>
+		
+		<table concordion:verifyRows="#transfer : getNettedTransfers(#trade)">
+			<tr>
+				<th concordion:echo="#transfer.id">Id</th>
+				<th concordion:assertEquals="#transfer.settlementMethod">Settle Method</th>
+				<th concordion:assertEquals="#transfer.settlementAmount">Amount</th>
+				<th concordion:assertEquals="#transfer.eventType">Event Type</th>
+				<th concordion:assertEquals="#transfer.status">Status</th>
+				<th concordion:assertEquals="#transfer.valueDate">Value Date</th>
+				<th concordion:assertEquals="#transfer.nettingType">Netting Type</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td>SWIFT</td>
+				<td>1,000,000.00 USD</td>
+				<td>PAYMENT</td>
+				<td>VERIFIED</td>
+				<td>02/06/2016</td>
+				<td>None</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>SWIFT</td>
+				<td>48,688.89 USD</td>
+				<td>RECEIPT</td>
+				<td>VERIFIED</td>
+				<td>02/06/2022</td>
+				<td>None</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>SWIFT</td>
+				<td>1,000,000.00 USD</td>
+				<td>RECEIPT</td>
+				<td>VERIFIED</td>
+				<td>02/06/2022</td>
+				<td>None</td>
+			</tr>
+		</table>
+
+		<p>
+			Aplicando la acción <span concordion:set="#action">CANCEL</span>
+			cancelamos la operación (<span concordion:assertTrue="#trade.applyAction(#action)">OK</span>).
+		</p>
+
+		<p>
+			Comprobamos la correcta cancelacion de la operación:
+		</p>
+		<table concordion:verifyRows="#trade : getTrades(#extRef)">
+			<tr>
+				<th concordion:echo="#trade.id">Trade id</th>
+				<th concordion:assertEquals="#trade.productType">Product Type</th>
+				<th concordion:assertEquals="#trade.status">Status</th>
+				<th concordion:assertEquals="#trade.tradeDate">Trade Date</th>
+				<th concordion:assertEquals="#trade.settleDate">Settle Date</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td>Cash</td>
+				<td>CANCELED</td>
+				<td>31/05/16 09:00:00.000 o'clock CEST</td>
+				<td>02/06/2016</td>
+			</tr>
+		</table>
+			
+	
+		<p>
+			Esperamos hasta que el <span concordion:set="#engine">TransferEngine</span>
+			(<span concordion:echo="waitForEngine(#engine)"></span> eventos pendientes) y el <span concordion:set="#engine">MessageEngine</span>
+			(<span concordion:echo="waitForEngine(#engine)"></span> eventos pendientes)
+			procesen todos sus eventos pendientes.
+		</p>
+	
+
+		<h2>Resultado</h2>
+
+		<p>
+			Comprobamos en la siguiente tabla que Calypso a cancelado las liquidaciones de la operación:
+		</p>
+
+		<table concordion:verifyRows="#transfer : getNettedTransfers(#trade)">
+			<tr>
+				<th concordion:echo="#transfer.id">Id</th>
+				<th concordion:assertEquals="#transfer.settlementMethod">Settle Method</th>
+				<th concordion:assertEquals="#transfer.settlementAmount">Amount</th>
+				<th concordion:assertEquals="#transfer.eventType">Event Type</th>
+				<th concordion:assertEquals="#transfer.status">Status</th>
+				<th concordion:assertEquals="#transfer.valueDate">Value Date</th>
+				<th concordion:assertEquals="#transfer.nettingType">Netting Type</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td>SWIFT</td>
+				<td>1,000,000.00 USD</td>
+				<td>PAYMENT</td>
+				<td>CANCELED</td>
+				<td>02/06/2016</td>
+				<td>None</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>SWIFT</td>
+				<td>48,688.89 USD</td>
+				<td>RECEIPT</td>
+				<td>CANCELED</td>
+				<td>02/06/2022</td>
+				<td>None</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>SWIFT</td>
+				<td>1,000,000.00 USD</td>
+				<td>RECEIPT</td>
+				<td>CANCELED</td>
+				<td>02/06/2022</td>
+				<td>None</td>
+			</tr>
+			
+		</table>
+
+		<p>
+			Esperamos a que el MessageEngine procese sus eventos (
+			<span concordion:echo="waitForEngine('MessageEngine')"> </span>
+			eventos pendientes).			
+		</p>
+		
+		<p>
+			Comprobamos que el mensaje MT210 (Id <span concordion:echo="#msg1.id"> </span>)
+			<span concordion:execute="#msg1.reload()"> </span>
+			se mantiene en estado <span concordion:assertEquals="#msg1.status">ACKED</span>
+			y los otros mensajes asociados a los Transfers se han cancelado:
+		</p>
+		<table concordion:verifyRows="#msg : getMessagesByEventTypes(#trade, {'VERIFIED_RECEIPT','VERIFIED_PAYMENT','CANCELED_RECEIPT'})">
+			<tr>
+				<th concordion:echo="#msg.id">Id</th>
+				<th concordion:assertEquals="#msg.templateName">Plantilla del mensaje</th>
+				<th concordion:assertEquals="#msg.eventType">Tipo de Evento</th>
+				<th concordion:echo="#msg.transfer">Transfer Id</th>
+				<th concordion:assertEquals="#msg.status">Estado</th>
+				<th concordion:assertEquals="#msg.subAction">Sub Action</th>	
+				<th concordion:echo="#msg.linkedMessage">Mensaje relacionado</th>			
+			</tr>
+			<tr>
+				<td></td>
+				<td>MT103</td>
+				<td>VERIFIED_PAYMENT</td>
+				<td></td>
+				<td>CANCELED</td>
+				<td>NONE</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>MT292</td>
+				<td>CANCELED_RECEIPT</td>
+				<td></td>
+				<td>VERIFIED</td>
+				<td>CANCEL</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>MT210</td>
+				<td>VERIFIED_RECEIPT</td>
+				<td></td>
+				<td>ACKED</td>
+				<td>NONE</td>
+				<td></td>
+			</tr>		
+			<tr>
+				<td></td>
+				<td>MT210</td>
+				<td>VERIFIED_RECEIPT</td>
+				<td></td>
+				<td>CANCELED</td>
+				<td>NONE</td>
+				<td></td>
+			</tr>		
+		</table>
+		
+	</body>
+	
+</html>

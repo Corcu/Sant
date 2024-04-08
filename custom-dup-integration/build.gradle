@@ -1,0 +1,34 @@
+apply plugin: 'calypso-java-project'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+jar {
+  manifest {
+    attributes(
+      'JAR_COMPILATION_DATE': System.getenv('COMPILATION_DATE'),
+      'JAR_GIT_BRANCH_NAME': System.getenv('GIT_BRANCH'),
+      'JAR_RELEASE_NAME': System.getenv('RELEASE'),
+      'JAR_SETTINGS_GRADLE': System.getenv('PROJECT')
+    )
+  }
+}
+
+dependencies {
+	compile project(':custom-shared-common')
+	provided project(":engineserver")
+	compile fileTree(dir: '../../../client/lib', exclude: 'custom-*.jar', include: '*.jar')
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs = ['src-core/main/java','src-ctm/main/java']
+		}
+
+		resources {
+            srcDirs= ['src-core/main/resources']
+        }
+	}
+}

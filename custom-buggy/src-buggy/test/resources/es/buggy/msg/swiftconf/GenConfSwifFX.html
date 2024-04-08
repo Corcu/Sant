@@ -1,0 +1,326 @@
+<html 
+	xmlns:concordion="http://www.concordion.org/2007/concordion" 
+	xmlns:ext="urn:concordion-extensions:2010">
+
+	<head>
+		<title>Generación de Confirmación Swift sin SDIs de un FX</title>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+		<script>
+	            function showMessage(elementId) {
+		            var x = document.getElementById(elementId);
+		            if (x.style.display === "none") {
+		                x.style.display = "block";
+		            } else {
+		                x.style.display = "none";
+		            }
+	            }
+	        </script>
+	</head>
+	
+	<body>
+	
+		<h1>Generación de Confirmación Swift sin SDIs de un FX</h1>
+			
+		<h2>Descripción</h2>
+	
+		<p>
+			Las operaciones de FX imputadas contra Contrapartidas en las cuales exista un contacto de tipo SwiftConf, generarán confirmaciones 
+			de tipo SWIFTCONFIRM en los estados VERIFIED, TERMINATED y CANCELED.
+		</p>
+		<p>
+			Este test inserta una operación para una contrapartida que tiene contacto SwiftConf y tiene SDI que cumplan con los 
+			requisitos para su asignación automática. La operación, por tanto, quedará detenida en VERIFIED generando una 
+			confirmación de tipo SWIFTCONFIRM.
+		</p>
+
+		<h2>Datos de Referencia</h2>
+		<p>
+    		Insertamos una operación de tipo FXSwap utilizando el template 
+    		<span concordion:set="#template">GenConfSwifFX.xml</span>
+	       	con la contrapartida  
+	       	<span concordion:execute="setProperty('CPTY', #TEXT)">AAT_BANK</span>.
+		</p>
+		
+		<p>
+			La External Reference de la operación será 
+			<span concordion:echo="#extRef=generateExternalRef()"> </span>  
+			<span concordion:execute="setProperty('EXTERNAL_REFERENCE', #extRef)"> </span>
+			y el Pricing Environment será
+			 <span concordion:set="#pricingEnv">default</span>.
+		</p>
+
+		<p>
+			A modo de referencia se pueden tener en cuenta las siguientes
+			imágenes: 
+		</p>
+		<p>
+    		Los datos correspondientes al contacto SwiftConf de la contrapartida AAT_BANK:
+			<span style="visibility: hidden;" concordion:set="#contactCpty">ContactCprtyFX.png</span>
+			<span ext:embed="getImage(#contactCpty)"> </span>
+		</p>
+
+		<h2>Proceso de prueba</h2>
+		<p>			
+           Insertamos la operación. Para ello se toma como trade de referencia el que se muestra a continuación:
+			<span style="visibility: hidden;" concordion:set="#TradeFX">TradeConfSwift.png</span>
+			<span ext:embed="getImage(#TradeFX)"> </span>
+			<span concordion:execute="#ack=importCDUF(#template)"> </span> 
+		</p>        
+		
+<button onclick="showMessage('ack')">Mostrar Ack completo</button>	
+<pre concordion:echo="#ack" id="ack" style="display:none"> </pre>			
+
+		<table concordion:execute="#trade = getTrade(#ack.tradeId)">
+			<tr>
+				<th concordion:echo="#trade.id">Trade Id</th>
+				<th concordion:assertEquals="#trade.status">Status</th>
+				<th concordion:echo="#trade.settleDate">Settle Date</th>
+			</tr>
+			<tr><td></td><td>VERIFIED</td><td></td></tr>
+		</table>
+
+		<p>
+            Esperamos hasta que el <span concordion:set="#engine">MessageEngine</span>
+            (<span concordion:echo="waitForEngine(#engine)"></span>)
+            procesen todos sus eventos pendientes.
+		</p>
+		
+		
+		<h2>Resultado</h2>
+		
+	    <p>
+			Comprobamos que Calypso ha generado dos confirmaciones de tipo 
+			<span concordion:set="#msgType">SWIFTCONFIRM</span>. Una por cada pata del FXSwap, 
+			comprobamos su template asociado, estado y entidad receptora del mensaje: 
+		</p>
+		
+		<span concordion:execute="#msgs=getMessagesByMsgTypes(#trade, {#msgType})"> </span>
+
+		<table concordion:verifyRows="#msg : #msgs">
+				<tr>
+					<th concordion:echo="#msg.id">Message Id</th>
+					<th concordion:echo="#msg.trade">Trade</th>
+					<th concordion:assertEquals="#msg.eventType">Event Type</th>
+					<th concordion:assertEquals="#msg.messageType">Message Type</th>
+					<th concordion:assertEquals="#msg.templateName">Template Name</th>
+					<th concordion:assertEquals="#msg.receiver">Receiver</th>
+					<th concordion:assertEquals="#msg.getAttribute('LegType')">Attr. Leg Type</th>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td>VERIFIED_TRADE</td>
+					<td>SWIFTCONFIRM</td>
+					<td>MT300</td>
+					<td>AAT_BANK</td>
+					<td>Near</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td>VERIFIED_TRADE</td>
+					<td>SWIFTCONFIRM</td>
+					<td>MT300</td>
+					<td>AAT_BANK</td>
+					<td>Far</td>
+				</tr>
+		</table>			
+
+		<p>Ahora comprobamos las etiquetas de cada mensaje swift</p>
+
+		<!-- primer mensaje -->
+		
+		<p concordion:echo="#msg=#msgs.get(0)"> </p>
+		<span concordion:execute="#swiftMessage=#msg.formatSwiftDocument(#pricingEnv)"> </span>
+		
+		<table>
+	        <tr>
+		        <th>TAG</th>
+		        <th>Name</th>
+		        <th>Value</th>
+	        </tr>
+			<tr>
+				<td>22A</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('22A')">Type of Operation</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('22A')">NEWT</td>
+			</tr>
+			<tr>
+				<td>94A</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('94A')">Scope of Operation</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('94A')">BILA</td>
+			</tr>
+			<tr>
+				<td>22C</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('22C')">Common Reference</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('22C')">BANK007079BUGGM0</td>
+			</tr>
+			<tr>
+				<td>82A</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('82A')">Party A</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('82A')">BUGGESM0XXX</td>
+			</tr>
+			<tr>
+				<td>87D</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('87A')">Party B</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('87A')">BANKES00XXX</td>
+			</tr>
+			<tr>
+				<td>17F</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('17F')">Non-Deliverable Indicator</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('17F')">N</td>
+			</tr>
+			<tr>
+				<td>30T</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('30T')">Trade Date</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('30T')">20270119</td>
+			</tr>
+			<tr>
+				<td>30V</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('30V')">Value Date</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('30V')">20270125</td>
+			</tr>
+			<tr>
+				<td>36</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('36')">Exchange Rate</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('36')">7,87079</td>
+			</tr>
+			<tr>
+				<td>32B</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('32B')">Currency, Amount</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('32B')">EUR3811561,48</td>
+			</tr>
+			<tr>
+				<td>53A</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('53A')">Delivery Agent</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('53A')">/ES40700708754390464800 \ AGNTEGHIJXXX</td>
+			</tr>
+			<tr>
+				<td>57A</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('57A')">Receiving Agent</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('57A')">/897987987909053 \ AGNTEGHIJXXX</td>
+			</tr>
+			<tr>
+				<td>33B</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('33B')">Currency, Amount</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('33B')">CNY30000000,</td>
+			</tr>
+			<tr>
+				<td>53D</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('53A',2)">Delivery Agent</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('53A',2)">/897987987909053 \ AGNTEGHIJXXX</td>
+			</tr>
+			<tr>
+				<td>57A</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('57A',2)">Receiving Agent</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('57A',2)">/ES40700708754390464800 \ AGNTEGHIJXXX</td>
+			</tr>
+			<tr>
+				<td>58D</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('58A')">Beneficiary Institution</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('58A')">BANKES00XXX</td>
+			</tr>
+	    </table>
+			    
+<button onclick="showMessage('swiftMessage')">Mostrar Mensaje Swift completo</button>	
+<pre concordion:echo="#swiftMessage.text" id="swiftMessage" style="display:none"> </pre>	
+
+		<!-- segundo mensaje -->
+	    
+		<p concordion:echo="#msg=#msgs.get(1)"> </p>
+		<span concordion:execute="#swiftMessage=#msg.formatSwiftDocument(#pricingEnv)"> </span>
+		
+		<table>
+	        <tr>
+		        <th>TAG</th>
+		        <th>Name</th>
+		        <th>Value</th>
+	        </tr>
+			<tr>
+				<td>22A</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('22A')">Type of Operation</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('22A')">NEWT</td>
+			</tr>
+			<tr>
+				<td>94A</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('94A')">Scope of Operation</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('94A')">BILA</td>
+			</tr>
+			<tr>
+				<td>22C</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('22C')">Common Reference</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('22C')">BANK009029BUGGM0</td>
+			</tr>
+			<tr>
+				<td>82A</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('82A')">Party A</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('82A')">BUGGESM0XXX</td>
+			</tr>
+			<tr>
+				<td>87D</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('87A')">Party B</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('87A')">BANKES00XXX</td>
+			</tr>
+			<tr>
+				<td>17F</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('17F')">Non-Deliverable Indicator</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('17F')">N</td>
+			</tr>
+			<tr>
+				<td>30T</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('30T')">Trade Date</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('30T')">20270119</td>
+			</tr>
+			<tr>
+				<td>30V</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('30V')">Value Date</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('30V')">20270426</td>
+			</tr>
+			<tr>
+				<td>36</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('36')">Exchange Rate</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('36')">7,9029</td>
+			</tr>
+			<tr>
+				<td>32B</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('32B')">Currency, Amount</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('32B')">CNY10000000,</td>
+			</tr>
+			<tr>
+				<td>53A</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('53A')">Delivery Agent</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('53A')">/ES40700708754390464800 \ AGNTEGHIJXXX</td>
+			</tr>
+			<tr>
+				<td>57A</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('57A')">Receiving Agent</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('57A')">/897987987909053 \ AGNTEGHIJXXX</td>
+			</tr>
+			<tr>
+				<td>33B</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('33B')">Currency, Amount</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('33B')">EUR1265358,29</td>
+			</tr>
+			<tr>
+				<td>53A</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('53A',2)">Delivery Agent</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('53A',2)">/897987987909053 \ AGNTEGHIJXXX</td>
+			</tr>
+			<tr>
+				<td>57A</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('57A',2)">Receiving Agent</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('57A',2)">/ES40700708754390464800 \ AGNTEGHIJXXX</td>
+			</tr>
+			<tr>
+				<td>58D</td>
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagName('58A')">Beneficiary Institution</td>     	
+				<td concordion:assertEquals="#swiftMessage.getSwiftTagValue('58A')">BANKES00XXX</td>
+			</tr>
+	    </table>
+			    
+<button onclick="showMessage('swiftMessage')">Mostrar Mensaje Swift completo</button>	
+<pre concordion:echo="#swiftMessage.text" id="swiftMessage" style="display:none"> </pre>		    
+	    
+	</body>
+	
+</html>
+		

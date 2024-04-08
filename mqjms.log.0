@@ -1,0 +1,39 @@
+20 de abril de 2023 13:39:09 CEST[DispatchThread: [com.ibm.mq.jmqi.remote.impl.RemoteSession[:/3c2aa57a][connectionId=414D51434D515445534F4430312020207F943764AA16FE2F,traceIdentifier=1,remoteTraceIdentifier=-1]]] com.ibm.msg.client.jms.internal.JmsProviderExceptionListener
+Se ha enviado una excepción al escucha de excepciones de la conexión: '
+                       Mensaje : com.ibm.msg.client.jms.DetailedJMSException: JMSWMQ1107: Ha surgido un problema con esta conexión.
+Se ha producido un error con la conexión JMS de IBM MQ.
+Utilice la excepción enlazada para determinar la causa de este error.
+                         Clase : class com.ibm.msg.client.jms.DetailedJMSException
+                          Pila : com.ibm.msg.client.wmq.common.internal.Reason.reasonToException(Reason.java:595)
+                               : com.ibm.msg.client.wmq.common.internal.Reason.createException(Reason.java:215)
+                               : com.ibm.msg.client.wmq.internal.WMQConnection.consumer(WMQConnection.java:920)
+                               : com.ibm.mq.jmqi.remote.api.RemoteHconn.callEventHandler(RemoteHconn.java:3046)
+                               : com.ibm.mq.jmqi.remote.api.RemoteHconn.driveEventsEH(RemoteHconn.java:723)
+                               : com.ibm.mq.jmqi.remote.impl.RemoteDispatchThread.processHconn(RemoteDispatchThread.java:684)
+                               : com.ibm.mq.jmqi.remote.impl.RemoteDispatchThread.run(RemoteDispatchThread.java:223)
+                               : com.ibm.msg.client.commonservices.workqueue.WorkQueueItem.runTask(WorkQueueItem.java:319)
+                               : com.ibm.msg.client.commonservices.workqueue.SimpleWorkQueueItem.runItem(SimpleWorkQueueItem.java:99)
+                               : com.ibm.msg.client.commonservices.workqueue.WorkQueueItem.run(WorkQueueItem.java:343)
+                               : com.ibm.msg.client.commonservices.workqueue.WorkQueueManager.runWorkQueueItem(WorkQueueManager.java:312)
+                               : com.ibm.msg.client.commonservices.j2se.workqueue.WorkQueueManagerImplementation$ThreadPoolWorker.run(WorkQueueManagerImplementation.java:1240)
+     Se debe a [1] --> Mensaje : com.ibm.mq.MQException: JMSCMQ0001: La llamada de IBM MQ ha fallado con código de terminación '2' ('MQCC_FAILED') razón '2009' ('MQRC_CONNECTION_BROKEN').
+                         Clase : class com.ibm.mq.MQException
+                          Pila : com.ibm.msg.client.wmq.common.internal.Reason.createException(Reason.java:203)
+                               : com.ibm.msg.client.wmq.internal.WMQConnection.consumer(WMQConnection.java:920)
+                               : com.ibm.mq.jmqi.remote.api.RemoteHconn.callEventHandler(RemoteHconn.java:3046)
+                               : com.ibm.mq.jmqi.remote.api.RemoteHconn.driveEventsEH(RemoteHconn.java:723)
+                               : com.ibm.mq.jmqi.remote.impl.RemoteDispatchThread.processHconn(RemoteDispatchThread.java:684)
+                               : com.ibm.mq.jmqi.remote.impl.RemoteDispatchThread.run(RemoteDispatchThread.java:223)
+                               : com.ibm.msg.client.commonservices.workqueue.WorkQueueItem.runTask(WorkQueueItem.java:319)
+                               : com.ibm.msg.client.commonservices.workqueue.SimpleWorkQueueItem.runItem(SimpleWorkQueueItem.java:99)
+                               : com.ibm.msg.client.commonservices.workqueue.WorkQueueItem.run(WorkQueueItem.java:343)
+                               : com.ibm.msg.client.commonservices.workqueue.WorkQueueManager.runWorkQueueItem(WorkQueueManager.java:312)
+                               : com.ibm.msg.client.commonservices.j2se.workqueue.WorkQueueManagerImplementation$ThreadPoolWorker.run(WorkQueueManagerImplementation.java:1240)
+'.
+
+EXPLICACIÓN:
+null
+
+ACCIÓN:
+Revise los detalles de la excepción para obtener más información.
+--------------------------------------------------------------------

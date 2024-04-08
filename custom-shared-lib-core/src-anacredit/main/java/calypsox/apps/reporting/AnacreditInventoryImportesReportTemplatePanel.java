@@ -1,0 +1,3 @@
+package calypsox.apps.reporting;
+public class AnacreditInventoryImportesReportTemplatePanel extends AnacreditInventoryOperReportTemplatePanel {
+}

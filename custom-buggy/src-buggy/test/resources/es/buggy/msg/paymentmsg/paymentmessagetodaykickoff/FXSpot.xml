@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CalypsoUploadDocument ClientCode="BBVA" Source="STAR" UploadDate="2014-11-13T15:30:26.03+01:00" Version="1">
+    <CalypsoTrade>
+        <ExternalReference>@EXTERNAL_REFERENCE@</ExternalReference>
+        <InternalReference>@EXTERNAL_REFERENCE@</InternalReference>
+        <TradeId xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+        <Action>NEW</Action>
+        <TradeCounterParty>@CPTY@</TradeCounterParty>
+        <CounterPartyRole>CounterParty</CounterPartyRole>
+        <TradeBook>COL_MAD_DV</TradeBook>
+        <TradeBundleType/>
+        <TradeBundleName/>
+        <TradeCurrency>USD</TradeCurrency>
+        <TradeSettlementCurrency/>
+        <TradeNotional>1.0E6-399999900</TradeNotional>
+        <BuySell>Sell</BuySell>
+        <TradeDateTime>@SPOT_DATE@T10:14:26.108+02:00</TradeDateTime>
+        <TradeSettleDate>@SPOT_DATE@</TradeSettleDate>
+        <StartDate>@SPOT_DATE@</StartDate>
+        <TraderName>CENTRO</TraderName>
+        <SalesPerson>NONE</SalesPerson>
+        <Comment>OP_085</Comment>
+        <TemplateName/>
+        <HolidayCode>
+            <Holiday>LON</Holiday>
+        </HolidayCode>
+        <ProductType>FX</ProductType>
+        <ProductSubType>FXSpot</ProductSubType>
+        <Product>
+            <FX>
+                <PrimaryCurrency>USD</PrimaryCurrency>
+                <SecondaryCurrency>EUR</SecondaryCurrency>
+                <PrimaryAmount>4261200</PrimaryAmount>
+                <SpotRate>1.32445</SpotRate>
+                <ForwardPoints/>
+                <MarginPoint/>
+                <FinalRate>1.32445</FinalRate>
+                <NegotiableCurrency>EUR</NegotiableCurrency>
+                <ResetDate/>
+            </FX>
+        </Product>
+        <TradeKeywords/>
+    </CalypsoTrade>
+</CalypsoUploadDocument>

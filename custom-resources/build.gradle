@@ -1,0 +1,20 @@
+apply plugin: 'calypso-java-project'
+
+jar {
+  manifest {
+    attributes(
+      'JAR_COMPILATION_DATE': System.getenv('COMPILATION_DATE'),
+      'JAR_GIT_BRANCH_NAME': System.getenv('GIT_BRANCH'),
+      'JAR_RELEASE_NAME': System.getenv('RELEASE'),
+      'JAR_SETTINGS_GRADLE': System.getenv('PROJECT')
+    )
+  }
+}
+
+sourceSets {
+    main {
+        resources {
+           srcDirs = ['src/main/resources']
+        }
+    }
+}

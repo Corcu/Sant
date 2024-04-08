@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+    <!-- declare a Spring bean to use the Camel Properties component in Spring XML -->
+    <bean id="properties"
+          class="org.apache.camel.component.properties.PropertiesComponent">
+        <property name="location" value="classpath:mic.connection.properties"/>
+    </bean>
+
+    <!-- bridge spring property placeholder with Camel -->
+    <!-- NOT use the <context:property-placeholder at the same time, only this bridge bean -->
+    <bean id="bridgePropertyPlaceholder" class="org.apache.camel.spring.spi.BridgePropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:mic.connection.properties"/>
+    </bean>
+
+    <!--MIC Connection-->
+    <bean id="connectionFactory" class="com.tibco.tibjms.TibjmsConnectionFactory">
+        <property name="serverUrl" value="${jms.url}"/>
+        <property name="userName" value="${jms.user}" />
+        <property name="userPassword" value="${jms.password}" />
+    </bean>
+
+    <bean id="tibco" class="org.apache.camel.component.jms.JmsComponent">
+        <property name="connectionFactory" ref="connectionFactory"/>
+    </bean>
+   <!--END MIC Connection-->
+
+    <!--Process MIC response message-->
+    <bean id="creMicReturnProcessor" class="calypsox.camel.processor.CreMicReturnProcessor"/>
+
+    <camelContext id="micCamelContext" xmlns="http://camel.apache.org/schema/spring">
+
+        <route id="mic.out" autoStartup="true">
+            <from uri="direct:sendMessage"/>
+            <log message="Mic message data ${body}"/>
+            <to uri="tibco:queue:{{output.queue.name}}"/>
+            <transform>
+                <simple>${body}\n</simple>
+            </transform>
+            <to uri="file:/calypso_interfaces/mic/?fileName=mic_sent_messages_${date:now:yyyyMMdd}.log&amp;fileExist=Append"/>
+            <onException>
+                <exception>java.lang.Exception</exception>
+                <log message="MicSendMessage - exception" loggingLevel="ERROR" logName="MicMessage"/>
+                <to uri="file:/calypso_interfaces/mic/?fileName=mic_failed_messages_${date:now:yyyyMMdd}.log&amp;fileExist=Append"/>
+            </onException>
+        </route>
+
+        <route id="mic.in" autoStartup="true">
+            <from uri="tibco:queue:{{input.queue.name}}"/>
+            <process ref="creMicReturnProcessor"/>
+            <transform>
+                <simple>${body}\n</simple>
+            </transform>
+            <to uri="file:/calypso_interfaces/mic/?fileName=mic_response_messages_${date:now:yyyyMMdd}.log&amp;fileExist=Append"/>
+        </route>
+
+    </camelContext>
+</beans>

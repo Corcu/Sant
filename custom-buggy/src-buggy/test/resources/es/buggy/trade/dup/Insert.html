@@ -1,0 +1,99 @@
+<html 
+	xmlns:concordion="http://www.concordion.org/2007/concordion" 
+	xmlns:ext="urn:concordion-extensions:2010">
+
+	<head>
+		<title>Inserción de una operación con CDUF</title>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+		<script>
+            function showMessage(elementId) {
+	            var x = document.getElementById(elementId);
+	            if (x.style.display === "none") {
+	                x.style.display = "block";
+	            } else {
+	                x.style.display = "none";
+	            }
+            }
+        </script>
+	</head>	
+
+	<body>
+		<h1>Inserción de una operación con CDUF</h1>		
+		
+		
+
+	<h2>Descripción</h2>
+
+	<p>
+		La inserción de operaciones es dependiente el componente de importacion utilizado. 
+		Buggy soporta la importacion de Trades a traves de CML y de CDUF.
+		
+		Insertamos una operación FX a través de CDUF y comprobamos que tanto el ACK del 
+		DataUploader como la importación ha sido correctamente gestionados en Calypso.
+		
+	</p>
+
+	<h2>Datos de Referencia</h2>
+
+	<p>
+		Utilizaremos el template de carga: <span concordion:set="#template">FX.xml</span> y la Contrapartida
+		<span concordion:execute="setProperty('CPTY', #TEXT)">AAT_BANK</span>.
+	</p>
+		
+	<p>
+		La External Reference de la operación 
+		<span concordion:echo="#extRef=generateExternalRef()"> </span>  
+		<span concordion:execute="setProperty('EXTERNAL_REFERENCE', #extRef)"> </span>
+	</p>
+
+	<h2>Porceso de Prueba</h2>
+
+	<p>
+		Insertamos la operación.  
+		<span concordion:execute="#ack=importCDUF(#template)"> </span> 
+	</p>
+	<button onclick="showMessage('ack')">Mostrar Ack completo</button>	
+	<pre concordion:echo="#ack" id="ack" style="display:none"> </pre>
+
+	<p>
+		La operación insertada es igual a la mostrada en la siguiente imagen:
+	</p>
+	
+	<p>
+		<span style="visibility: hidden;" concordion:set="#img">trade.png</span>
+		<span ext:embed="getImage(#img)"> </span>
+	</p>
+
+	<h2>Resultado</h2>
+	
+	<p>
+		Comprobamos que se la operacion ha sido insertada correctamente y comprobamos sus datos en Calypso:
+	</p>
+
+	<table concordion:execute="#trade=getTrade(#ack.tradeId)">
+		<tr>
+			<th concordion:echo="#trade.id">Id</th>
+			<th concordion:assertEquals="#trade.productDescription">Product Description</th>
+			<th concordion:assertEquals="#trade.productType">Product type</th>
+			<th concordion:assertEquals="#trade.status">Status</th>
+			<th concordion:assertEquals="#trade.counterParty">Cpty</th>
+			<th concordion:assertEquals="#trade.currencyPair">Currency</th>
+			<th concordion:assertEquals="#trade.tradeDate">Trade Date</th>
+			<th concordion:assertEquals="#trade.settleDate">Settle Date</th>
+			<th concordion:assertEquals="#trade.primaryAmount">Primary Amount</th>
+		</tr>
+		<tr>
+			<td></td>
+			<td>FX/EUR/GBP</td>
+			<td>FX</td>
+			<td>VERIFIED</td>
+			<td>AAT_BANK</td>
+			<td>EUR/GBP</td>
+			<td>09/01/28 09:00:00.000 o'clock CET</td>
+			<td>11/01/2028</td>
+			<td>-29,751.52 EUR</td>
+		</tr>
+	</table>
+
+</body>
+</html>

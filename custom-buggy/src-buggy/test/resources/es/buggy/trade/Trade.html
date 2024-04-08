@@ -1,0 +1,53 @@
+<html 
+	xmlns:concordion="http://www.concordion.org/2007/concordion" 
+	xmlns:ext="urn:concordion-extensions:2010">
+
+	<head>
+		<title>Gestión de Operaciones</title>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	</head>	
+
+	<body>
+		<h1>Gestión de Operaciones</h1>		
+		
+		<h2>Inserción de Operaciones</h2>
+		<ul>
+			<li>
+				<a concordion:run="concordion" href="dup/Insert.html">
+            		Carga de una operación de FX con CDUF
+            	</a>
+            </li>
+			<li>
+				<a concordion:run="concordion" href="cml/Insert.html">
+            		Carga de una operación de FX con CML
+            	</a>
+            </li>
+			<li>
+				<a concordion:run="concordion" href="cml/ModifyInterestBearing.html">
+            		Modificación de una operación de InterestBearing
+            	</a>
+            </li>
+        </ul>
+        
+        <h2>Procesos Automáticos</h2>
+		<ul>
+			<li>
+				<a concordion:run="concordion" href="schedtask/Schedtask.html">
+            		Gestión automatica de Operaciones con ScheduledTask
+            	</a>
+            </li>
+        </ul>
+        
+        <h2>Procesos Manuales</h2>
+		<ul>
+			<li>
+				<a concordion:run="concordion" href="manualactions/Manualactions.html">
+            		Gestión de acciones manuales sobre Operaciones
+            	</a>
+            </li>
+        </ul>
+        
+        
+
+	</body>
+</html>

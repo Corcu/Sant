@@ -1,0 +1,33 @@
+<securityTransfer>
+    <internalId>|MARGIN_CALL_ID|</internalId>
+    <transactionId>|TRADE_ID|</transactionId>
+    <messageId>|MESSAGE_ID|</messageId>
+    <currency>|TRADE_CURRENCY|</currency>
+    <tradeDate>|TRADE_DATE|</tradeDate>
+    <amount>|AMOUNT|</amount>
+    <mainAmount>|MAIN_AMOUNT|</mainAmount>
+    <valueDate>|SETTLE_DATE|</valueDate>
+    <maturityDate>|PRODUCT_MATURITYDATE|</maturityDate>
+    <status>ALT</status>
+    <counterparty>|TRADE_COUNTERPARTY|</counterparty>
+    <owner>|TRADE_PROCESSING_ORGANIZATION|</owner>
+    <portfolio>|TRADE_BOOK_SECURITY|</portfolio>
+    <user>|USER|</user>
+    <price>|PRODUCT_PRINCIPAL|</price>
+    <bond>|ISINCODE|</bond>
+    <triparty>|TRIPARTY|</triparty>
+    <dealTypeSec>|DEAL_TYPE|</dealTypeSec>
+    <rehypothecation>|CONTRACT_IS_REHYPOTHECABLE|</rehypothecation>
+    <accrued>0</accrued>
+    <!--calypso>
+    if (|CLEARING_OK| == "true"){
+    	include "ClearingModeInclude.txt";
+    }
+    if (|IS_TRIPARTY| == "true" && |CLEARING_OK| == "false"){
+    	include "TripartySecInclude.txt";
+    }
+    </calypso-->    <fo_system>|KEYWORD_BO_SYSTEM|</fo_system>
+	<front_id>|KEYWORD_NUM_FRONT_ID|</front_id>
+    <deliveryType>|DELIVERY_TYPE|</deliveryType>
+    <movementType>|MOVEMENT_TYPE|</movementType>
+</securityTransfer>

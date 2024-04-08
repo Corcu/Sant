@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<CalypsoUploadDocument>
+    <CalypsoSDI>
+        <Action>NEW</Action>
+        <BeneficiaryShortName>AAT_BANK</BeneficiaryShortName>
+        <BeneficiaryName>SIMPLE BANK ENTITY</BeneficiaryName>
+        <SDISettlementType>CASH</SDISettlementType>
+        <Role>CounterParty</Role>
+        <Contact>Swift</Contact>
+        <ProcessingOrg>BUGGY</ProcessingOrg>
+        <Products/>
+        <SDFilter></SDFilter>
+        <Currencies>
+            <Currency>ANY</Currency>
+        </Currencies>
+        <PayRec>BOTH</PayRec>
+        <TradeCounterParty></TradeCounterParty>
+        <Preferred>true</Preferred>
+        <Priority>1</Priority>
+        <Method>SWIFT</Method>
+        <Direct>false</Direct>
+        <EffectiveFrom>1970-01-01</EffectiveFrom>
+        <EffectiveTo>2100-12-31</EffectiveTo>
+        <ByTradeDate>false</ByTradeDate>
+        <AgentCode>AAT_AGENT</AgentCode>
+        <AgentAccount>ES40700708754390464800</AgentAccount>
+        <AgentContact>Swift</AgentContact>
+        <AgentName>SIMPLE AGENT ENTITY</AgentName>
+        <AgentGLAc></AgentGLAc>
+        <MessageToAgent>true</MessageToAgent>
+        <firstIntermediaryPresent>true</firstIntermediaryPresent>
+        <Intermediary1Code></Intermediary1Code>
+        <Intermediary1Contact></Intermediary1Contact>
+        <Intermediary1GLAc></Intermediary1GLAc>
+        <Intermediary1Name></Intermediary1Name>
+        <MessageToIntermediary1>false</MessageToIntermediary1>
+        <secondIntermediaryPresent>false</secondIntermediaryPresent>
+        <Intermediary2Code></Intermediary2Code>
+        <MessageToIntermediary2>false</MessageToIntermediary2>
+        <LinkSDI>false</LinkSDI>
+        <Attributes>
+            <Attribute>
+                <AttributeName>Details_Of_Charges</AttributeName>
+                <AttributeValue>Details_Of_Charges</AttributeValue>
+            </Attribute>
+            <Attribute>
+                <AttributeName>OUR</AttributeName>
+                <AttributeValue>OUR</AttributeValue>
+            </Attribute>
+      </Attributes>
+        <Reference>Test_AAT_BANK_SWIFT_ANY</Reference>
+    </CalypsoSDI>
+</CalypsoUploadDocument>

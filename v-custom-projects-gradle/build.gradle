@@ -1,0 +1,75 @@
+buildscript {
+	dependencies {
+		classpath files("../lib/calypso-extension-plugins.jar")
+	}
+}
+
+// Change version here
+allprojects {
+	if(project.hasProperty("repoUrl") && project.repoUrl) {
+		boolean credentialsRequired = project.hasProperty("repoUsername") && project.hasProperty("repoPassword") && project.repoUsername && project.repoPassword
+		repositories {
+			maven {
+				url repoUrl
+				if(credentialsRequired) {
+					credentials {
+						username repoUsername
+						password repoPassword
+					}
+				}
+			}
+		}
+	}
+	// Add maven central repository
+	repositories {
+		mavenCentral()
+	}
+}
+
+subprojects {
+	apply plugin: 'calypso-java-project'
+	
+	tasks.withType(JavaCompile) {
+		options.encoding = 'ISO-8859-1'
+	}
+	
+	sourceSets {
+		main {
+			java {
+				srcDirs = ['src-core/main/java','src-optimizador/main/java','src-regulatorio/main/java','src-common/main/java','src-call-account/main/java']
+			}
+			resources {
+				srcDirs = ['src-core/calypso/resources','src-optimizador/calypso/resources','src-regulatorio/calypso/resources','src-common/main/resources','src-call-account/main/resources']
+			}
+		}
+	}
+}
+
+project(":dataserver") {
+	apply plugin: 'calypso-exploded-war'
+	
+	warProject.targetWarFile="../../deploy/dataserver.war"
+
+	dependencies {
+		deploy project(':custom-shared-call-account')
+		deploy project(':custom-shared-lib-core')
+		deploy project(':custom-shared-common')
+		deploy project(':custom-dataserver-services-core')
+	}
+}
+
+project(":engineserver") {
+	apply plugin: 'calypso-exploded-war'
+	
+	warProject.targetWarFile="../../deploy/engineserver.war"
+
+	dependencies {
+		deploy project(':custom-shared-call-account')
+		deploy project(':custom-shared-lib-core')
+		deploy project(':custom-shared-common')
+		deploy project(':custom-engine-core')
+	}
+}
+
+evaluationDependsOnChildren()
+apply plugin: 'calypso-distribution'

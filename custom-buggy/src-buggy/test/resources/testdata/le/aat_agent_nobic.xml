@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<CalypsoUploadDocument>
+    <CalypsoLegalEntity>
+        <Action>NEW</Action>
+        <ShortName>AAT_AGENT_NOBIC</ShortName>
+        <LongName>SIMPLE AGENT ENTITY WITH NO BIC</LongName>
+        <Parent></Parent>
+        <Country>SPAIN</Country>
+        <InactiveDate>3000-01-01</InactiveDate>
+        <ExternalReference>Test_AAT_AGENT_NOBIC</ExternalReference>
+        <HolidayCode/>
+        <Financial>true</Financial>
+        <Status>Enabled</Status>
+        <Roles>
+            <Role>Agent</Role>
+        </Roles>
+        <TripartySubstitutionB>false</TripartySubstitutionB>
+    </CalypsoLegalEntity>
+</CalypsoUploadDocument>

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2006 sp2 U (http://www.altova.com) by Jerome Thibaud (private) -->
+<!--
+ * Copyright (c) 2000 by Calypso Technology, Inc. 595 Market Street, Suite 1980,
+ * San Francisco, CA 94105, U.S.A. All rights reserved.
+ * 
+ * This software is the confidential and proprietary information of Calypso
+ * Technology, Inc. ("Confidential Information"). You shall not disclose such
+ * Confidential Information and shall use it only in accordance with the terms
+ * of the license agreement you entered into with Calypso Technology.
+ -->
+<xsd:schema xmlns:calypso="http://www.calypso.com/xml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.calypso.com/xml">
+	<xsd:annotation>
+		<xsd:documentation>
+		The elements that are used in multiple sub-schema definitions for Calypso ML are
+		defined in this file.
+		This includes Object, IdentifiedObject, Identifiers and more.
+		It also includes restrictions of the xsd:string that match usages in Calypso Tech's software.
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:attributeGroup name="StandardAttributes.atts">
+		<xsd:attribute name="version" use="required">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:token">
+					<xsd:pattern value="[0-9]+-[0-9]+"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+		<xsd:attribute name="action" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+				The Action that produced this Object document.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:attributeGroup>
+	<xsd:attributeGroup name="IdentifierAttributes.atts">
+		<xsd:attribute name="code" type="xsd:string" use="required"/>
+		<xsd:attribute name="codifier" type="xsd:string" use="required"/>
+	</xsd:attributeGroup>
+	<xsd:complexType abstract="true" name="Object">
+		<xsd:annotation>
+			<xsd:documentation>
+			The abstract base type from which all the Calypso Object instances
+			are derived if they need to be processed independently.
+			Object representations that are only sub parts of other objects need not
+			derive from this type.
+			</xsd:documentation>
+		</xsd:annotation>		
+		<!-- <xsd:sequence>
+			<xsd:element name="auditInfo" type="calypso:Audit" minOccurs="0"/>
+		</xsd:sequence>-->
+		<xsd:attributeGroup ref="calypso:StandardAttributes.atts"/>
+	</xsd:complexType>
+	<xsd:complexType abstract="true" name="IdentifiedObject">
+		<xsd:annotation>
+			<xsd:documentation>
+			The abstract base type from which all the CalypsoObject instances
+			are derived.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="calypso:Object">
+				<xsd:sequence>
+					<xsd:element name="identification" type="calypso:VersionedIdentifiers">
+						<xsd:annotation>
+							<xsd:documentation>
+							The name and version that enable to identify the object in a system
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="Identifiers">
+		<xsd:sequence>
+			<xsd:element minOccurs="0" name="type" type="xsd:string"/>
+			<xsd:element maxOccurs="unbounded" name="identifier" type="calypso:Identifier"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="VersionedIdentifiers">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" name="versionedIdentifier" type="calypso:VersionedIdentifier"/>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="identifier" type="calypso:Identifier"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Identifier">
+		<xsd:annotation>
+			<xsd:documentation>
+			Enables to identify a Calypso entity from its name in a system.
+			This is used to make a reference to a Calypso Entity.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attributeGroup ref="calypso:IdentifierAttributes.atts"/>
+	</xsd:complexType>
+	<xsd:complexType name="VersionedIdentifier">
+		<xsd:annotation>
+			<xsd:documentation>
+			Enables to fully identify a Calypso object from its name and version in a system.
+			This is used to identify a calypso Object.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attributeGroup ref="calypso:IdentifierAttributes.atts"/>
+		<xsd:attribute name="version" type="xsd:int" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="DomainValueIdentifier">	
+  		<xsd:choice id="choice">
+   			<xsd:element name="itemValue" type="xsd:string" />
+   			<xsd:element name="domainValue" type="calypso:Identifiers" />
+  		</xsd:choice>
+	</xsd:complexType>	
+	<xsd:complexType name="LegalEntityIdentifiers">
+		<xsd:annotation>
+			<xsd:documentation>
+			A reference on a LegalEntity.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="calypso:Identifiers">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="role" type="calypso:DomainValue"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="MarketDataIdentifiers">
+		<xsd:annotation>
+			<xsd:documentation>
+			A reference on a LegalEntity.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="calypso:Identifiers">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="date" type="xsd:dateTime"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:simpleType name="Name">
+		<xsd:annotation>
+			<xsd:documentation>
+			Defines a string type that preserves the white spaces.
+			This is separate from comment because the length may be limited
+			in future versions.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="DomainValue">
+		<xsd:annotation>
+			<xsd:documentation>
+			Identifies string values that should be part of a Calypso
+			domain.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="Comment">
+		<xsd:annotation>
+			<xsd:documentation>
+			Defines a string type that preserves the white spaces.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="CurrencyCode">
+		<xsd:annotation>
+			<xsd:documentation>The string representation of a currency.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[A-Z]{1,3}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="Holidays">
+		<xsd:annotation>
+			<xsd:documentation>
+			Defines a list of holidays.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:list itemType="xsd:string"/>
+	</xsd:simpleType>
+	<xsd:complexType name="SimpleTypedObject">
+		<xsd:sequence minOccurs="0">
+			<xsd:element name="value" type="xsd:anySimpleType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="DomainValueAttribute">
+		<xsd:sequence>
+			<xsd:element name="name" type="calypso:DomainValueIdentifier" />
+			<xsd:choice>
+				<xsd:element name="identifierValue" type="calypso:DomainValueIdentifier" />
+				<xsd:element name="stringValue" type="xsd:string" />
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:complexType>	
+</xsd:schema>

@@ -1,0 +1,29 @@
+<html 
+	xmlns:concordion="http://www.concordion.org/2007/concordion" 
+	xmlns:ext="urn:concordion-extensions:2010">
+
+	<head>
+		<title>ATLEContact</title>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	</head>	
+
+	<body>
+		<h1>Clase ATLEContact</h1>		
+		
+		<p concordion:execute="#contact=findLEContact()">
+			En la siguiente tabla se muestran algunos de los posibles métodos que se pueden 
+			utilizar desde Buggy AT API.
+			Utilizaremos el contacto <span concordion:echo="#contact"> </span>.
+		</p>
+		
+		
+		<table>
+			<tr>
+				<th>Propiedad</th>
+				<th>Tipo</th>				
+				<th>Resultado</th>
+			</tr>
+			<span ext:embed="getMethods(#contact)"> </span>			
+		</table>
+	</body>
+</html>

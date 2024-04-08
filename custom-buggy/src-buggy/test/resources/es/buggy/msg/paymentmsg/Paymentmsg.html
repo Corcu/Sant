@@ -1,0 +1,37 @@
+<html 
+	xmlns:concordion="http://www.concordion.org/2007/concordion" 
+	xmlns:ext="urn:concordion-extensions:2010">
+
+	<head>
+		<title>Payment messaging</title>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	</head>	
+
+	<body>
+		<h1>Payment messaging</h1>		
+		
+		<ul>
+			<li>
+				<a concordion:run="concordion" href="PaymentMessageNoContact.html">
+            		Generación de Mensaje de Pago sin BIC para Validación
+            	</a>
+            </li>
+			<li>
+				<a concordion:run="concordion" href="PaymentMessageKickOff.html">
+            		Generación de Mensaje de Pago Futuro detenido por KicOff de Divisa
+            	</a>
+            </li>
+			<li>
+				<a concordion:run="concordion" href="PaymentMessageTodayKickOff.html">
+            		Generación de Mensaje de Pago 0D que cumple KickOff Modificado
+            	</a>
+            </li>
+			<li>
+				<a concordion:run="concordion" href="MT292TradeCancel.html">
+            		Generación de Mensaje de Pago de Cancelacion MT192
+            	</a>
+            </li>
+        </ul>
+
+	</body>
+</html>

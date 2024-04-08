@@ -1,0 +1,3 @@
+Action,LongName,ShortName,Parent,Country,InactiveDate,User,ExternalReference,HolidayCode,Financial,Status,Roles,Comment,Attribute.Role,Attribute.ProcessingOrg,Attribute.AttributeName,Attribute.AttributeValue
+NEW,ZAROE,CALBO,NONE,UNITED STATES,,calypso_user,ExternaRef_ZAROE,USD,FALSE,Enabled,CounterParty,Sample for creating a new LE,ALL,NONE,REGION,NY
+NEW,JANGO,DJANGO,NONE,UNITED STATES,,calypso_user,ExternaRef_JANGO,USD,FALSE,Enabled,CounterParty,Sample for creating a new LE,ALL,NONE,CHECK_INCOMING_FORMAT,MAYBE

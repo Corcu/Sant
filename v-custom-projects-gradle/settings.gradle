@@ -1,0 +1,10 @@
+include ':custom-shared-common'
+
+include ':custom-shared-lib-core'
+include ':custom-dataserver-services-core'
+include ':custom-engine-core'
+include ':custom-client-core'
+
+include ':custom-shared-call-account'
+
+includeFlat 'dataserver', 'engineserver'

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2007 rel. 3 (http://www.altova.com) by Ma Hnin Yu Aung (Calypso Technology) -->
+<!--
+ * Copyright (c) 2000 by Calypso Technology, Inc. 595 Market Street, Suite 1980,
+ * San Francisco, CA 94105, U.S.A. All rights reserved.
+ *
+ * This software is the confidential and proprietary information of Calypso
+ * Technology, Inc. ("Confidential Information"). You shall not disclose such
+ * Confidential Information and shall use it only in accordance with the terms
+ * of the license agreement you entered into with Calypso Technology.
+ -->
+<xsd:schema xmlns:calypso="http://www.calypso.com/xml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.calypso.com/xml" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xsd:annotation>
+		<xsd:documentation>
+		This is schema defines Calypso ML.
+		The top element for any valid Calypso ML document is the calypsoDocument element
+		defined in this file.
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:include schemaLocation="calypso-base.xsd"/>
+	<xsd:complexType name="CalypsoDocument">
+		<xsd:annotation>
+			<xsd:documentation>
+		This is the type of top-level element for valid Calypso ML documents.
+		</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:annotation>
+				<xsd:documentation>
+					A Calypso ML document contains a list of Objects as defined in the calypso-common.xsd file.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:element name="calypsoObject" type="calypso:Object" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="calypsoDocument" type="calypso:CalypsoDocument"/>
+</xsd:schema>

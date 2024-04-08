@@ -1,0 +1,126 @@
+//
+// Ce fichier a ?t? g?n?r? par l'impl?mentation de r?f?rence JavaTM Architecture for XML Binding (JAXB), v2.2.6
+// Voir <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
+// Toute modification apport?e ? ce fichier sera perdue lors de la recompilation du sch?ma source.
+// G?n?r? le : 2014.08.28 ? 10:38:25 AM CEST
+//
+
+
+package calypsox.tk.util.mmoo.jaxb.eurex;
+
+import java.math.BigDecimal;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+
+
+/**
+ * <p>Classe Java pour sumMembClgBillFeeRecType complex type.
+ * 
+ * <p>Le fragment de sch?ma suivant indique le contenu attendu figurant dans cette classe.
+ * 
+ * <pre>
+ * &lt;complexType name="sumMembClgBillFeeRecType">
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;sequence>
+ *         &lt;element name="billTyp" type="{http://www.eurex.com/ec-en/technology/c7/system-documentation-c7}billTypType"/>
+ *         &lt;element name="currTypCod" type="{http://www.eurex.com/ec-en/technology/c7/system-documentation-c7}currTypCodType"/>
+ *         &lt;element name="sumClgAmnt" type="{http://www.eurex.com/ec-en/technology/c7/system-documentation-c7}sumClgAmntType"/>
+ *       &lt;/sequence>
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
+ * &lt;/complexType>
+ * </pre>
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "sumMembClgBillFeeRecType", propOrder = {
+    "billTyp",
+    "currTypCod",
+    "sumClgAmnt"
+})
+public class SumMembClgBillFeeRecType {
+
+    @XmlElement(required = true)
+    protected BillTypType billTyp;
+    @XmlElement(required = true)
+    protected String currTypCod;
+    @XmlElement(required = true)
+    protected BigDecimal sumClgAmnt;
+
+    /**
+     * Obtient la valeur de la propri?t? billTyp.
+     * 
+     * @return
+     *     possible object is
+     *     {@link BillTypType }
+     *     
+     */
+    public BillTypType getBillTyp() {
+        return billTyp;
+    }
+
+    /**
+     * D?finit la valeur de la propri?t? billTyp.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link BillTypType }
+     *     
+     */
+    public void setBillTyp(BillTypType value) {
+        this.billTyp = value;
+    }
+
+    /**
+     * Obtient la valeur de la propri?t? currTypCod.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getCurrTypCod() {
+        return currTypCod;
+    }
+
+    /**
+     * D?finit la valeur de la propri?t? currTypCod.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setCurrTypCod(String value) {
+        this.currTypCod = value;
+    }
+
+    /**
+     * Obtient la valeur de la propri?t? sumClgAmnt.
+     * 
+     * @return
+     *     possible object is
+     *     {@link BigDecimal }
+     *     
+     */
+    public BigDecimal getSumClgAmnt() {
+        return sumClgAmnt;
+    }
+
+    /**
+     * D?finit la valeur de la propri?t? sumClgAmnt.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link BigDecimal }
+     *     
+     */
+    public void setSumClgAmnt(BigDecimal value) {
+        this.sumClgAmnt = value;
+    }
+
+}

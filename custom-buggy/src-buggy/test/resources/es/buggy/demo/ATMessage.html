@@ -1,0 +1,44 @@
+<html 
+	xmlns:concordion="http://www.concordion.org/2007/concordion" 
+	xmlns:ext="urn:concordion-extensions:2010">
+
+	<head>
+		<title>ATMessage</title>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	</head>	
+
+	<body>
+		<h1>Clase ATMessage</h1>		
+		
+		<p concordion:execute="#msg=findMessage()">
+			En la siguiente tabla se muestran algunos de los posibles métodos que se pueden 
+			utilizar desde Buggy AT API.
+			Utilizaremos el mensaje <span concordion:echo="#msg"> </span>.
+		</p>
+		
+		
+		<table>
+			<tr>
+				<th>Propiedad</th>
+				<th>Tipo</th>				
+				<th>Resultado</th>
+			</tr>
+			<span ext:embed="getMethods(#msg)"> </span>			
+		</table>
+		
+		<p>
+			También es posible recuperar los atributos del mensaje utilizando el método 
+			getAttribute(String name)
+		</p>
+		
+		<table>
+			<tr>
+				<th>Atributo del mensaje</th>
+				<th>Tipo</th>				
+				<th>Valor</th>
+			</tr>
+			<span ext:embed="getAttributes(#msg)"> </span>			
+		</table>
+
+	</body>
+</html>

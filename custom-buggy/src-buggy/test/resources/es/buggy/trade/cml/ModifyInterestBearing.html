@@ -1,0 +1,278 @@
+<html 
+	xmlns:concordion="http://www.concordion.org/2007/concordion" 
+	xmlns:ext="urn:concordion-extensions:2010">
+
+	<head>
+		<title>Modificación de una operación de InterestBearing</title>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+		<script>
+            function showMessage(elementId) {
+	            var x = document.getElementById(elementId);
+	            if (x.style.display === "none") {
+	                x.style.display = "block";
+	            } else {
+	                x.style.display = "none";
+	            }
+            }
+        </script>
+	</head>	
+
+	<body>
+		<h1>Modificación de una operación de InterestBearing</h1>		
+		
+		
+
+	<h2>Descripción</h2>
+
+	<p>
+		Una operación de InterestBearing se procesa STP hasta el estado VERIFIED y activando los procesos de
+		BackOffice.
+	</p>
+
+	<p>
+		Insertamos una operacion de InterestBearing con un solo día del periodo de Interés calculado y tras comprobar que se
+		procesa STP, insertamos una actualización del interés del Collateral para el segundo día del periodo. 
+		Comprobaremos que tanto los Entries (calculos diarios del interes del periodo) como el Importe 
+		de Principal de la Operacion de interes se actualizan correctamente, incluyendo el cálculos del 
+		segundo día del periodo.
+		Comprobamos también la actualización diaria de la Liquidación del Interés. 
+	</p>
+
+	<h2>Datos de Referencia</h2>
+
+	<p>
+		Utilizaremos el template de carga: <span concordion:set="#template">InterestBearing.xml</span> y la Contrapartida
+		<span concordion:execute="setProperty('CPTY', #TEXT)">AAT_BANK</span>.
+		<span concordion:execute="setProperty('ACTION', #TEXT)">NEW</span>.
+	</p>
+		
+	<p>
+		La External Reference de la operación 
+		<span concordion:echo="#extRef=generateExternalRef()"> </span>  
+		<span concordion:execute="setProperty('EXTERNAL_REFERENCE', #extRef)"> </span>
+	</p>
+
+	<h2>Proceso de Prueba</h2>
+
+	<p>
+		Insertamos la operación.  
+		<span concordion:execute="#tradeId=importCMLTrade(#template)"> </span> 
+	</p>
+	
+	<p>
+		La operación insertada es igual a la mostrada en la siguiente imagen:
+	</p>
+	
+	<p>
+		<span style="visibility: hidden;" concordion:set="#img">InterestBearing.png</span>
+		<span ext:embed="getImage(#img)"> </span>
+	</p>
+
+	<p>
+		Comprobamos que el InterestBearing se ha insertado correctamente:
+	</p>
+
+	<table concordion:execute="#trade=getTrade(#tradeId)">
+		<tr>
+			<th concordion:echo="#trade.id">Id</th>
+			<th concordion:assertEquals="#trade.productType">Product type</th>
+			<th concordion:assertEquals="#trade.status">Status</th>
+			<th concordion:assertEquals="#trade.counterParty">Cpty</th>
+			<th concordion:assertEquals="#trade.tradeCurrency">Currency</th>
+			<th concordion:assertEquals="#trade.tradeDate">Trade Date</th>
+			<th concordion:assertEquals="#trade.settleDate">Settle Date</th>
+			<th concordion:assertEquals="#trade.principalAmount">Principal</th>
+		</tr>
+		<tr>
+			<td></td>
+			<td>InterestBearing</td>
+			<td>VERIFIED</td>
+			<td>AAT_BANK</td>
+			<td>USD</td>
+			<td>01/01/19 22:56:21.000 o'clock CET</td>
+			<td>04/02/2019</td>
+			<td>100.00 USD</td>
+		</tr>
+	</table>
+	
+	<p>
+		Comprobamos que solo presenta los Entries correspondientes 
+		al primer dia del periodo (INTEREST / POSITION):
+	</p>
+	
+	<table concordion:verifyRows="#entry : #trade.getEntries()">
+		<tr>
+			<th concordion:assertEquals="#entry.entryType">Type</th>
+			<th concordion:assertEquals="#entry.entryDate">Date</th>
+			<th concordion:assertEquals="#entry.valueDate">Value date</th>
+			<th concordion:assertEquals="#entry.amount">Amount</th>
+			<th concordion:assertEquals="#entry.rate">Rate</th>
+		</tr>
+		<tr>
+			<td>INTEREST</td>
+			<td>01/01/2019</td>
+			<td>04/02/2019</td>
+			<td>100.0</td>
+			<td>1.1</td>
+		</tr>
+		<tr>
+			<td>POSITION</td>
+			<td>01/01/2019</td>
+			<td>01/01/2019</td>
+			<td>1000000.0</td>
+			<td>0.0</td>
+		</tr>
+	</table>
+	
+	
+	<p>
+    	Esperamos hasta que Calypso genera los Transfers de la operación comprobando que el 
+    	<span concordion:set="#engine">TransferEngine</span> no tenga eventos pendientes.
+    	<span concordion:execute="waitForEngine(#engine)"> </span>			
+	</p>
+	
+	<table concordion:verifyRows="#xfer : getNettedTransfers(#trade)">
+		<tr>
+			<th concordion:echo="#xfer.id">Transfer Id</th>
+			<th concordion:assertEquals="#xfer.eventType">Event type</th>
+			<th concordion:assertEquals="#xfer.status">Transfer status</th>
+			<th concordion:assertEquals="#xfer.settlementAmount">Transfer amount</th>
+			<th concordion:assertEquals="#xfer.settlementCurrency">Settle currency</th>
+			<th concordion:assertEquals="#xfer.valueDate">Value date</th>
+		</tr>
+		<tr>
+			<td></td>
+			<td>RECEIPT</td>
+			<td>VERIFIED</td>
+			<td>100.00 USD</td>
+			<td>USD</td>
+			<td>04/02/2019</td>
+		</tr>
+	</table>
+
+
+	<p>
+		Utilizaremos el template de carga: <span concordion:set="#template">InterestBearing_AMEND_0.xml</span> y la Contrapartida
+		<span concordion:execute="setProperty('CPTY', #TEXT)">AAT_BANK</span>.
+		<span concordion:execute="setProperty('ACTION', #TEXT)">AMEND</span>.
+		<span concordion:execute="setProperty('TRADE_ID', #tradeId)"> </span>
+	</p>
+		
+	<p>
+		Insertamos la modificacion de la Operación, recibiendo un nuevo día de intereses:  
+		<span concordion:execute="#tradeId=importCMLTrade(#template)"> </span> 
+	</p>
+
+
+	<h2>Resultado</h2>
+	
+	<p>
+		Comprobamos que el InterestBearing se ha modifcado correctamente:
+	</p>
+
+	<table concordion:execute="#trade=getTrade(#tradeId)">
+		<tr>
+			<th concordion:echo="#trade.id">Id</th>
+			<th concordion:assertEquals="#trade.productType">Product type</th>
+			<th concordion:assertEquals="#trade.status">Status</th>
+			<th concordion:assertEquals="#trade.counterParty">Cpty</th>
+			<th concordion:assertEquals="#trade.tradeCurrency">Currency</th>
+			<th concordion:assertEquals="#trade.tradeDate">Trade Date</th>
+			<th concordion:assertEquals="#trade.settleDate">Settle Date</th>
+			<th concordion:assertEquals="#trade.principalAmount">Principal</th>
+		</tr>
+		<tr>
+			<td></td>
+			<td>InterestBearing</td>
+			<td>VERIFIED</td>
+			<td>AAT_BANK</td>
+			<td>USD</td>
+			<td>01/01/19 22:56:21.000 o'clock CET</td>
+			<td>04/02/2019</td>
+			<td>202.00 USD</td>
+		</tr>
+	</table>
+	
+	<p>
+		Comprobamos que ahora presenta los Entries correspondientes 
+		al primer y segundo dia del periodo (INTEREST / POSITION):
+	</p>
+	
+	<table concordion:verifyRows="#entry : #trade.getEntries()">
+		<tr>
+			<th concordion:assertEquals="#entry.entryType">Type</th>
+			<th concordion:assertEquals="#entry.entryDate">Date</th>
+			<th concordion:assertEquals="#entry.valueDate">Value date</th>
+			<th concordion:assertEquals="#entry.amount">Amount</th>
+			<th concordion:assertEquals="#entry.rate">Rate</th>
+		</tr>
+		<tr>
+			<td>INTEREST</td>
+			<td>01/01/2019</td>
+			<td>04/02/2019</td>
+			<td>100.0</td>
+			<td>1.1</td>
+		</tr>
+		<tr>
+			<td>POSITION</td>
+			<td>01/01/2019</td>
+			<td>01/01/2019</td>
+			<td>1000000.0</td>
+			<td>0.0</td>
+		</tr>
+		<tr>
+			<td>INTEREST</td>
+			<td>02/01/2019</td>
+			<td>04/02/2019</td>
+			<td>102.0</td>
+			<td>1.2</td>
+		</tr>
+		<tr>
+			<td>POSITION</td>
+			<td>02/01/2019</td>
+			<td>02/01/2019</td>
+			<td>1000000.0</td>
+			<td>0.0</td>
+		</tr>
+	</table>
+	
+	
+	<p>
+    	Esperamos hasta que Calypso genera los Transfers de la operación comprobando que el 
+    	<span concordion:set="#engine">TransferEngine</span> no tenga eventos pendientes.
+    	<span concordion:execute="waitForEngine(#engine)"> </span>			
+	</p>
+	
+	<p>
+		Comprobamos que la liquidación anterior se ha cancelado y se ha generado una nueva con el nuevo importe de la operación.
+	</p>
+	
+	<table concordion:verifyRows="#xfer : getNettedTransfers(#trade)">
+		<tr>
+			<th concordion:echo="#xfer.id">Transfer Id</th>
+			<th concordion:assertEquals="#xfer.eventType">Event type</th>
+			<th concordion:assertEquals="#xfer.status">Transfer status</th>
+			<th concordion:assertEquals="#xfer.settlementAmount">Transfer amount</th>
+			<th concordion:assertEquals="#xfer.settlementCurrency">Settle currency</th>
+			<th concordion:assertEquals="#xfer.valueDate">Value date</th>
+		</tr>
+		<tr>
+			<td></td>
+			<td>RECEIPT</td>
+			<td>CANCELED</td>
+			<td>100.00 USD</td>
+			<td>USD</td>
+			<td>04/02/2019</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>RECEIPT</td>
+			<td>VERIFIED</td>
+			<td>202.00 USD</td>
+			<td>USD</td>
+			<td>04/02/2019</td>
+		</tr>
+	</table>
+
+</body>
+</html>

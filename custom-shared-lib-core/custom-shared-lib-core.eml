@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inheritJdk="true">
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<lib name="com.ibm.mq.allclient-9.3.2.0.jar" scope="COMPILE">
+		<srcroot url="jar://$MODULE_DIR$/../../../client/lib/com.ibm.mq.allclient-9.3.2.0.jar!/"/>
+	</lib>
+</component>

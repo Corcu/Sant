@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2006 rel. 3 sp2 (http://www.altova.com) by CNCE (CNCE) -->
+<xs:schema xmlns:optimizer="http://collateral.optimization.isban.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://collateral.optimization.isban.com/" version="1.0">
+	<xs:element name="importStatusList" type="optimizer:importStatusListType">
+		<xs:annotation>
+			<xs:documentation>The definition of ImportStatusList object</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="importStatusListType">
+		<xs:sequence>
+			<xs:element name="importStatus" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="importKey" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>The unique Key defining the import</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="importStatus" type="optimizer:importStatus">
+							<xs:annotation>
+								<xs:documentation>The Status of the import OK/KO</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="errors" type="optimizer:errorsList" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>The list of errors occured</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="error">
+		<xs:sequence>
+			<xs:element name="code" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>The error code</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="description" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>The error description</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="importStatus">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:complexType name="errorsList">
+		<xs:sequence>
+			<xs:element name="error" type="optimizer:error" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

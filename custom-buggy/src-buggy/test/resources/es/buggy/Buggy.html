@@ -1,0 +1,64 @@
+<html 
+	xmlns:concordion="http://www.concordion.org/2007/concordion" 
+	xmlns:ext="urn:concordion-extensions:2010">
+
+	<head>
+		<title>Buggy automatic tests</title>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	</head>	
+
+	<body>
+		<h1>Buggy Automatic Tests and Examples</h1>
+		
+		<table border="1">
+			<tr>
+				<th colspan="4">Version Control</th>
+			</tr>
+			<tr>
+				<th align="left">Buggy Version:</th>
+				<td><span concordion:echo="version.buggyVersion"> </span></td>
+				<th align="left">Client version</th>
+				<td><span concordion:echo="version.clientVersion"> </span></td>
+			</tr>
+			<tr>
+				<th align="left">Calypso</th>
+				<td><span concordion:echo="version.dataModelVersion"> </span></td>
+				<th align="left">DataUploader</th>
+				<td><span concordion:echo="version.dataUploaderVersion"> </span></td>
+			</tr>
+			<tr>
+				<th align="left">Environment</th>
+				<td colspan="3">
+					<span concordion:echo="version.environmentName"> </span>
+				</td>
+			</tr>
+		</table>		
+		
+		<h2>
+			<a concordion:run="concordion" href="trade/Trade.html">
+            	Trading
+            </a>
+        </h2>
+        <h2>
+			<a concordion:run="concordion" href="acc/Acc.html">
+            	Accounting
+            </a>
+        </h2>
+         <h2>
+			<a concordion:run="concordion" href="msg/Msg.html">
+            	Messaging
+            </a>
+        </h2>
+        <h2>
+			<a concordion:run="concordion" href="xfer/Xfer.html">
+            	Transfers
+            </a>
+        </h2>
+        <h2>
+			<a concordion:run="concordion" href="demo/Demo.html">
+            	API Demo
+            </a>
+        </h2>
+ 
+	</body>
+</html>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
+<FieldTemplate>
+<Switch condition="|MT599_TYPEE|">
+		<Target condition="Initiation">
+We have contracted a CSA with the below 
+counterparty.
+Please execute collateral creation based on the 
+below conditions on our behalf:
+1.Pledgee(Secured party)
+- KSD A/C : |PLEDGEE_ACCOUNT|
+- Name : |PLEDGEE_NAME| 
+2.Pledgor
+- KSD A/C : |PLEDGOR_ACCOUNT|
+- Name : |PLEDGOR_NAME|
+3.Collateral detail
+- ISIN: |ISIN_CODE|
+- (FACE) AMOUNT: |TRADE_NOMINAL|
+4.PLEDGE EXECUTION DATE: |SETTLE_DATE|
+5.Margin call: No 
+6.Daily settlement method: Normal Pledge 
+7.Expiration date: |PRODUCT_MATURITYDATE|
+8.Fee Levy: |FEE_LEVY|
+9.Usage of Foreign Currency Bond: No
+10.Collateral return to pledgor in case
+	 of pledgee´s bankruptcy: |RETURN_BANKRUPTCY|  
+		</Target>
+		<Target condition="Add">
+PLEASE RECEIVE THE 
+COLLATERAL AS PER THE BELOW
+ CONDITIONS.
+1. Collateral Management: NO
+2. Counterparty: |COUNTERPARTY|
+3. KSD A/C: |PLEDGOR_ACCOUNT|
+4. Collateral (To Be Added)
+- ISIN Code: |ISIN_CODE|
+- Face Amount: |TRADE_NOMINAL|
+5. Value date: |TRADE_DATE|
+		</Target>
+		<Target condition ="Return">
+PLEASE RETURN THE 
+COLLATERAL AS PER THE BELOW 
+CONDITIONS.
+1. Collateral Management: NO
+2. Counterparty: |COUNTERPARTY|
+3. KSD A/C: |PLEDGEE_ACCOUNT|
+4. Collateral (To Be Cancelled)
+- ISIN Code: |ISIN_CODE|
+- Face Amount: |TRADE_NOMINAL|
+5. Value date: |TRADE_DATE|		
+		
+		</Target>
+		
+	</Switch>
+</FieldTemplate>

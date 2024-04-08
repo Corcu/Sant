@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:element name="internalId" type="xsd:integer"/>
+    <xsd:element name="messageId" type="xsd:integer"/>
+    <xsd:element name="messageId" type="xsd:integer"/>
+    <xsd:element name="currency" type="xsd:string"/>
+  	<xsd:element name="tradeDate" type="FormattedDateType"/>
+  	<xsd:element name="dealType" type="dealTypeDef"/>
+  	<xsd:element name="amount" type="xsd:decimal"/>
+  	<xsd:element name="price" type="xsd:decimal"/> 	
+  	<xsd:element name="valueDate" type="FormattedDateType"/>
+  	<xsd:element name="maturityDate" type="FormattedDateType"/>
+  	<xsd:element name="isin" type="xsd:string"/>
+  	<xsd:element name="rehypothecation" type="xsd:string"/>
+  	<xsd:element name="accrued" type="xsd:string"/>
+  	 	
+  	
+  	<xs:simpleType name="dealTypeDef">
+    	<xsd:restriction base="xsd:integer">
+    		<xsd:pattern value="[0-3]"/>
+    	</xsd:restriction>
+  	</xsd:simpleType>
+	<xs:simpleType name="FormattedDateType">
+   		<xs:restriction base="xs:string">
+       		<xs:pattern value="(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/\d{4}"/>
+   		</xs:restriction>
+	</xs:simpleType>
+</xsd:schema>
+
+<!--
+<?xml version="1.0" encoding="UTF-8" ?>
+<securityTransfer>
+	<internalId>|TRADE_ID|</internalId>
+	<messageId></messageId>
+	<currency>|TRADE_CURRENCY|</currency>
+	<tradeDate>|TRADE_DATE|</tradeDate>
+	<dealType>|DEAL_TYPE|</dealType>
+	<amount>|TRADE_CURRENCY|</amount>
+	<price>|DEAL_TYPE|</price>
+	<valueDate>|SETTLE_DATE|</valueDate>
+	<maturityDate>|MATURITY_DATE|</maturityDate>
+	<isin></isin>
+	<owner></owner>
+	<rehypothecation>|DEAL_TYPE|</rehypothecation>
+	<accrued>0</accrued>
+	<!-- <status>|TRADE_STATUS|</status> -->
+	<marginCallId>|MARGIN_CALL_ID|</marginCallId>
+	<counterparty>|TRADE_COUNTERPARTY|</counterparty>
+	<user>|TRADE_ENTEREDUSER|</user>
+</securityTransfer>
+
+<cashTransfer>
+	<internalId>|TRADE_ID|</internalId>
+	<messageId></messageId>
+	<currency>|TRADE_CURRENCY|</currency>
+	<tradeDate>|TRADE_DATE|</tradeDate>
+	<dealType>|DEAL_TYPE|</dealType>
+	<amount>|TRADE_CURRENCY|</amount>
+	<valueDate>|SETTLE_DATE|</valueDate>
+	<maturityDate>|MATURITY_DATE|</maturityDate>
+	<status>|TRADE_STATUS|</status>
+	<marginCallId>|MARGIN_CALL_ID|</marginCallId>
+	<counterparty>|TRADE_COUNTERPARTY|</counterparty>
+	<user>|TRADE_ENTEREDUSER|</user>
+</cashTransfer>
+-->

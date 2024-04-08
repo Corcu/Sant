@@ -1,0 +1,290 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<link rel="stylesheet" href="marginCallNotif.css"
+	type="text/css" media="screen,print">
+</head>
+<body style="width: 750;">
+	<!--calypso>include "header.htm";</calypso-->
+	<!--calypso>include "footer.htm";</calypso-->
+<span class="normal"> 
+<!--calypso>
+	if (|CONTRACT_TYPE|=="CGAR")
+	inline "
+		Con referencia al Contrato Global para Otorgar Garant&iacute;as, Suplemento, anexos y confirmaciones respecto de Operaciones Financieras Derivadas 
+		del |CONTRACT_OPENDATE|, celebrado entre |SENDER_FULL_NAME| y |RECEIVER_FULL_NAME|.
+		<br>
+		Por medio del presente, les informamos que existe un Monto de Garant&iacute;a y/o Cantidad de Devoluci&oacute;n de acuerdo a la valuaci&oacute;n realizada el |MC_DATE|, la cual deber&aacute; ser honrada de conformidad con los t&eacute;rminos contenidos en los documentos antes citados.
+	";
+	else inline "
+		|POLITE|<br><br> 
+		Pursuant to the |CONTRACT_TYPE| and its collateral related provisions dated as of |CONTRACT_OPENDATE|, 
+		(the &quot;Agreement&quot;) between |SENDER_FULL_NAME| and |RECEIVER_FULL_NAME| (&quot;Counterparty&quot;) as amended from time to time, 
+		please be advised that as of the Valuation Time on |MC_DATE| the Credit Support Balance exceeds the Credit Support Amount by the sum of |CONTRACT_CURRENCY| |GLOBAL_CALC_REQUIRED_MARGIN|.
+	"; 
+</calypso-->
+</span>
+	<br><br>
+	<table width="750" border="0" cellpadding="0" cellspacing="0">
+		<tbody style="font-family: SansSerif; font-size: 9pt; line-height: 12pt;">
+			<tr class="interRow">
+				<td />
+				<td />
+			</tr>
+			<tr>
+				<td />
+
+			<!--calypso>
+			if (|CONTRACT_TYPE|=="CGAR") 
+			inline "
+				<td style='text-align: right;'><b>Todos los importes expresados en |CONTRACT_CURRENCY|</b></td>
+			";
+			else inline "
+				<td style='text-align: right;'><b>All Figures In |CONTRACT_CURRENCY|</b></td>
+			";
+			</calypso-->
+				
+			</tr>
+			<tr class="interRow">
+				<td />
+				<td />
+			</tr>
+
+			<!--calypso> 
+			if (|CONTRACT_TYPE|=="CSD") 
+			inline "
+					<tr>
+						<td>IM Requirement</td>
+						<td style='text-align: right;'>|NET_BALANCE|</td>
+					</tr>
+			";
+			if (|CONTRACT_TYPE|=="CGAR") 
+			inline "
+					<tr>
+						<td><b>Exposici&oacute;n Neta de Riesgo</b>
+						</td>
+						<td style='text-align: right;'><b>|NET_BALANCE|</b>
+						</td>
+					</tr>
+					<tr>
+						<td>Margen Inicial</td>
+						<td style='text-align: right;'>|INDP_AMOUNT|</td>
+					</tr>
+			";
+			if (|CONTRACT_TYPE|!="CSD" && |CONTRACT_TYPE|!="CGAR" && |CONTRACT_GROUP|=="IM") 
+			inline "
+					<tr>
+						<td><b>Exposure</b>
+						</td>
+						<td style='text-align: right;'><b>|NET_BALANCE|</b>
+						</td>
+					</tr>
+				<tr class='interRow'>
+					<td />
+					<td />
+				</tr>
+			";
+			if (|CONTRACT_TYPE|!="CGAR")
+			inline "
+					<tr>
+						<td><b>Exposure</b>
+						</td>
+						<td style='text-align: right;'><b>|NET_BALANCE|</b>
+						</td>
+					</tr>
+					<tr>
+						<td>Independent Amount(s)</td>
+						<td style='text-align: right;'>|INDP_AMOUNT|</td>
+					</tr>
+			";
+			</calypso-->
+			
+			<!--calypso>
+			if (|CONTRACT_TYPE|=="CGAR") 
+			inline "
+					<tr>
+						<td>Margen(es)</td>
+						<td style='text-align: right;'>|THRESHOLD_AMOUNT|</td>
+					</tr>
+					<tr>
+						<td><b>Cantidad Acordada</b></td>
+						<td style='text-align: right;'><b>|MARGIN_REQUIRED|</b>
+						</td>
+					</tr>
+			";
+			else inline "
+					<tr>
+						<td>Threshold</td>
+						<td style='text-align: right;'>|THRESHOLD_AMOUNT|</td>
+					</tr>
+					<tr>
+						<td><b>Credit Support Amount</b></td>
+						<td style='text-align: right;'><b>|MARGIN_REQUIRED|</b>
+						</td>
+					</tr>
+			";
+			</calypso-->
+
+			<tr class="interRow">
+				<td />
+				<td />
+			</tr>
+			
+			<!--calypso>
+			if (|CONTRACT_TYPE|=="CGAR") 
+			inline "
+					<tr>
+						<td>Valor de Mercado de la Garant&iacute;a Mantenida en Efectivo</td>
+						<td style='text-align: right;'>|PREVIOUS_CASH_MARGIN|</td>
+					</tr>
+					<tr>
+						<td>Valor de Mercado de la Garant&iacute;a Mantenida en T&iacute;tulos</td>
+						<td style='text-align: right;'>|PREVIOUS_SECURITY_MARGIN|</td>
+					</tr>
+					<tr>
+						<td>Valor de Mercado de la Garant&iacute;a Pendiente en Efectivo</td>
+						<td style='text-align: right;'>|PREVIOUS_PEND_CASH_MARGIN|</td>
+					</tr>
+					<tr>
+						<td>Valor de Mercado de la Garant&iacute;a Pendiente en T&iacute;tulos</td>
+						<td style='text-align: right;'>|PREVIOUS_PEND_SECURITY_MARGIN|</td>
+					</tr>
+			";
+			else inline "
+					<tr>
+						<td>After Haircut Value of Collateral Held/(Pledged) - Cash</td>
+						<td style='text-align: right;'>|PREVIOUS_CASH_MARGIN|</td>
+					</tr>
+					<tr>
+						<td>After Haircut Value of Collateral Held/(Pledged) -
+							Securities</td>
+						<td style='text-align: right;'>|PREVIOUS_SECURITY_MARGIN|</td>
+					</tr>
+					<tr>
+						<td>After Haircut Value of Collateral Pending - Cash</td>
+						<td style='text-align: right;'>|PREVIOUS_PEND_CASH_MARGIN|</td>
+					</tr>
+					<tr>
+						<td>After Haircut Value of Collateral Pending - Securities</td>
+						<td style='text-align: right;'>|PREVIOUS_PEND_SECURITY_MARGIN|</td>
+					</tr>
+					<tr>
+						<td>Accrued Interest</td>
+						<td style='text-align: right;'>|ACCRUED_INTEREST|</td>
+					</tr>
+					<tr>
+						<td>After Haircut Value of Outstanding Substitution
+							Transactions</td>
+						<td style='text-align: right;'>|OUTSTANDING_SUBSTIT_TRANSACT|</td>
+					</tr>
+			";
+			</calypso-->
+			
+			<tr class="interRow">
+				<td />
+				<td />
+			</tr>
+			
+			<!--calypso>
+			if (|CONTRACT_TYPE|=="CGAR") 
+			inline "
+					<tr>
+						<td><b>Entrega/Devoluci&oacute;n</b></td>
+						<td style='text-align: right;'><b>|CONSTITUED_MARGIN|</b>
+						</td>
+					</tr>
+					<tr>
+						<td><b>Monto M&iacute;nimo de Transferencia de Entrega</b></td>
+						<td style='text-align: right;'><b>|MTA_AMOUNT|</b>
+						</td>
+					</tr>
+					<tr>
+						<td><b>Monto de Redondeo de Entrega</b></td>
+						<td style='text-align: right;'><b>|PARTY_B_ROUNDING_AMOUNT|</b>
+						</td>
+					</tr>
+			";
+			else inline "
+
+					<tr>
+						<td><b>Return/Deliver Amount</b></td>
+						<td style='text-align: right;'><b>|CONSTITUED_MARGIN|</b>
+						</td>
+					</tr>
+					<tr>
+						<td><b>Return/Deliver Minimum Transfer Amount</b>
+						</td>
+						<td style='text-align: right;'><b>|MTA_AMOUNT|</b>
+						</td>
+					</tr>
+					<tr>
+						<td><b>Return/Deliver Rounding Amount</b></td>
+						<td style='text-align: right;'><b>|PARTY_B_ROUNDING_AMOUNT|</b>
+						</td>
+					</tr>
+			";
+			</calypso-->
+			
+			<tr>
+				<td />
+				<td />
+			</tr>
+			
+			<tr>
+			<!--calypso>
+			if (|CONTRACT_TYPE|=="CGAR") 
+			inline "
+				<td><b>Valor de Mercado de Garant&iacute;a requerido conforme a esta notificaci&oacute;n</b></td>
+			";
+			else inline "
+				<td><b>Value of Eligible Credit Support required pursuant to this notice</b></td>
+			";
+			</calypso-->
+				<td style="text-align: right;">|GLOBAL_REQUIRED_MARGIN|</td>		
+			</tr>
+			
+			<!--calypso> 
+			if (|CONTRACT_TYPE|=="CSD") 
+			inline "
+				<tr>
+					<td><b>Termination Currency</b></td>
+					<td style='text-align: right;'>|IM_TERM_CURRENCY|</td>
+				</tr>
+			";
+			</calypso-->
+			
+		</tbody>
+	</table>
+	<br>
+	<br>
+	<!--calypso>
+    if (|MC_PROCESSING_ORG|==|PO_SOVEREIGN|)
+    inline "<span class=\"smaller\"><b>|SENDER_FULL_NAME| SETTLEMENT INSTRUCTIONS</b></span>
+	|SETTLEMENT_INSTRUCTIONS_ABA_CODE|<br><br>";
+    </calypso-->
+	<span class="normal"> 
+	
+	<!--calypso>
+    if (|CONTRACT_TYPE|!="CGAR")
+    inline "
+
+    		All figures are shown from |SENDER_FULL_NAME| perspective
+    		<br><br>
+			Please contact us to confirm your agreement to the above calculation. If you dispute this calculation, please notify us promptly pursuant to the Agreement.
+			<br><br>
+
+			Should you have any questions please do
+			not hesitate to contact us.</br> Kind Regards, 
+	";
+	else inline "
+		Agradeceremos que cualquier aclaraci&oacute;n u observaci&oacute;n en relaci&oacute;n con el presente documento nos la haga llegar por escrito a m&aacute;s tardar el d&iacute;a h&aacute;bil siguiente 
+		a la fecha de recepci&oacute;n del mismo.</br>
+		En caso de no recibir comentarios de su parte dentro del plazo se&ntilde;alado, los t&eacute;rminos consignados en este documento se tendr&aacute;n ratificados y aceptados 
+		t&aacute;citamente por ustedes.</br>
+		Este documento es confidencial, est&aacute; prohibido su uso sin autorizaci&oacute;n. Favor de Destruirlo si no es usted el destinatario.
+	";
+    </calypso-->
+	</span>
+	
+</body>
+</html>

@@ -1,0 +1,86 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="marginCallNotif.css"
+          type="text/css" media="screen,print">
+</head>
+<body style="width: 750;">
+<!--calypso>include "header.htm";</calypso-->
+<!--calypso>include "footer.htm";</calypso-->
+<span class="normal">
+		|POLITE|<br><br>
+		Pursuant to the |CONTRACT_TYPE| and its collateral related provisions dated as of |CONTRACT_OPENDATE|,
+		(the &quot;Agreement&quot;) between |SENDER_FULL_NAME| and |RECEIVER_FULL_NAME| (&quot;Counterparty&quot;) as amended from time to time,
+		please be advised that as of the Valuation Time on |MC_DATE| the Credit Support Balance exceeds the Credit Support Amount by the sum of |CONTRACT_CURRENCY| |GLOBAL_CALC_REQUIRED_MARGIN|.
+</span>
+
+<br><br>
+<table width="750" border="0" cellpadding="0" cellspacing="0">
+    <tbody style="font-family: SansSerif; font-size: 9pt; line-height: 12pt;">
+    <tr class="interRow">
+        <td>
+        </td>
+    </tr>
+    <tr>
+        <td style='text-align: right;'><b>All Figures In |CONTRACT_CURRENCY|</b></td>
+    </tr>
+    <tr class="interRow">
+        <td>
+        </td>
+    </tr>
+    <tr>
+        <td><b>Exposure</b></td>
+        <td style='text-align: right;'><b>|NET_BALANCE|</b></td>
+    </tr>
+    <tr>
+        <td>Independent Amount(s)</td>
+        <td style='text-align: right;'>|INDP_AMOUNT|</td>
+    </tr>
+    <tr>
+        <td>Threshold</td>
+        <td style='text-align: right;'>|THRESHOLD_AMOUNT|</td>
+    </tr>
+    <tr>
+        <td><b>Credit Support Amount</b></td>
+        <td style='text-align: right;'><b>|MARGIN_REQUIRED|</b></td>
+    </tr>
+    <tr>
+        <td>Previous RQV</td>
+        <td style='text-align: right;'>|PREVIOUS_RQV|</td>
+    </tr>
+    <tr>
+        <td><b>Return/Deliver Amount to |SENDER_FULL_NAME|</b>.</td>
+        <td style='text-align: right;'><b>|CONSTITUED_MARGIN|</b></td>
+    </tr>
+    <tr>
+        <td><b>Return/Deliver Minimum Transfer Amount</b></td>
+        <td style='text-align: right;'><b>|MTA_AMOUNT|</b></td>
+    </tr>
+    <tr>
+        <td><b>Return/Deliver Rounding Amount</b></td>
+        <td style='text-align: right;'><b>|PARTY_B_ROUNDING_AMOUNT|</b></td>
+    </tr>
+    <tr>
+        <td><b>New RQV</b></td>
+        <td style='text-align: right;'><b>|REQUIRED_VALUE|</b></td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<br>
+
+<!--calypso>
+if (|MC_PROCESSING_ORG|==|PO_SOVEREIGN|)
+inline "<span class=\"smaller\"><b>|SENDER_FULL_NAME| SETTLEMENT INSTRUCTIONS</b></span>
+|SETTLEMENT_INSTRUCTIONS_ABA_CODE|<br><br>";
+</calypso-->
+
+<span class="normal">
+			Please contact us to confirm your agreement to the above calculation. If you dispute this calculation, please notify us promptly pursuant to the Agreement.
+			<br><br>
+			Should you have any questions please do
+			not hesitate to contact us.<br> Kind Regards,
+	</span>
+
+</body>
+</html>

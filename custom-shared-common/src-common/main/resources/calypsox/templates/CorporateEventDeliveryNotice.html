@@ -1,0 +1,154 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+    <link rel="stylesheet" href="marginCallNotif.css"
+          type="text/css" media="screen,print">
+</head>
+<body style="width: 750;">
+<!--calypso>include "header.htm";</calypso-->
+<!--calypso>include "footer.htm";</calypso-->
+
+<br>
+<div class="title">
+    <b>
+        <!--calypso>
+            inline "
+                |TITLE_DETAILS|
+            ";
+        </calypso-->
+    </b>
+</div>
+
+<br/>
+
+<table class="small" style="width: 90%">
+    <tr>
+        <td style='text-align: left;'><span class='small'><b>|AMOUNT_PAY_REC_TEXT|</b></span></td>
+        <td style='text-align: right;'><span class='small'><b>|TRADE_SETTLECCY| |TRADE_SETTLEMENT_AMOUNT|</b></span>
+        </td>
+    </tr>
+</table>
+
+<br/>
+
+<table class="noBorderTable" width="100%" style="font-size:9.0pt;font-family:SansSerif;mso-tab-count:1">
+    <tr style="color:white;">
+        <th bgcolor="#FF0000">PARTY</th>
+        <th bgcolor="#FF0000">VALUE DATE</th>
+        <th bgcolor="#FF0000">PRODUCT</th>
+        <th bgcolor="#FF0000">CURRENCY</th>
+        <th bgcolor="#FF0000">NOMINAL</th>
+    </tr>
+    <tr>
+        <td>|PARTY|</td>
+        <td>|TRANSFER_SETTLE_DATE|</td>
+        <td>|CA_PRODUCT|</td>
+        <td>|TRADE_CURRENCY|</td>
+        <td>|CA_NOMINAL|</td>
+    </tr>
+</table>
+
+    <table width="100%" style="margin: 20px;font-size:9.0pt;" CELLSPACING="2">
+        <tr>
+            <td width="40%" style="font-family: SansSerif;mso-tab-count:1"><b style='mso-bidi-font-weight:normal'><span lang=EN-GB style='font-size:9.0pt;mso-ansi-language:EN-GB'>Our Reference (Please always quote):</span></b></td>
+            <td width="60%" style='font-family: SansSerif;mso-tab-count:3'>|CA_REFERENCE|</td>
+        </tr>
+        <tr>
+            <td width="40%" style="font-family: SansSerif;mso-tab-count:1"><b style='mso-bidi-font-weight:normal'><span lang=EN-GB style='font-size:9.0pt;mso-ansi-language:EN-GB'>Claim Id:</span></b></td>
+            <td width="60%" style='font-family: SansSerif;mso-tab-count:3'>|TRADE_ID|</td>
+        </tr>
+        <tr>
+            <td width="40%" style="font-family: SansSerif;mso-tab-count:1">ISIN:</td>
+            <td width="60%" style='font-family: SansSerif;mso-tab-count:3'>|CA_ISIN|  |CA_ISIN_DESC|</td>
+        </tr>
+        <tr>
+            <td width="40%" style="font-family: SansSerif;mso-tab-count:1">Ex Date:</td>
+            <td width="60%" style='font-family: SansSerif;mso-tab-count:3'>|EX_DATE|</td>
+        </tr>
+        <tr>
+            <td width="40%" style="font-family: SansSerif;mso-tab-count:1">Record Date:</td>
+            <td width="60%" style='font-family: SansSerif;mso-tab-count:3'>|RECORD_DATE|</td>
+        </tr>
+        <tr>
+            <td width="40%" style="font-family: SansSerif;mso-tab-count:1">Payment Date:</td>
+            <td width="60%" style='font-family: SansSerif;mso-tab-count:3'>|TRANSFER_VALUEDATE|</td>
+        </tr>
+        <tr>
+            <td width="40%" style="font-family: SansSerif;mso-tab-count:1">CA Source Product Type:</td>
+            <td width="60%" style='font-family: SansSerif;mso-tab-count:3'>|CA_SOURCE_PRODUCT_TYPE|</td>
+        </tr>
+        <tr>
+            <td width="40%" style="font-family: SansSerif;mso-tab-count:1">Quantity:</td>
+            <td width="60%" style='font-family: SansSerif;mso-tab-count:3'>|TRADE_QUANTITY|</td>
+        </tr>
+        <tr>
+            <td width="40%" style="font-family: SansSerif;mso-tab-count:1">Unitary Price:</td>
+            <td width="60%" style='font-family: SansSerif;mso-tab-count:3'>|CA_GROSS_PRICE|</td>
+        </tr>
+        <tr>
+            <td width="40%" style="font-family: SansSerif;mso-tab-count:1">Percentage Rate:</td>
+            <td width="60%" style='font-family: SansSerif;mso-tab-count:3'>|CA_PERCENTAGE_RATE|</td>
+        </tr>
+        <tr>
+            <td width="40%" style="font-family: SansSerif;mso-tab-count:1">Currency:</td>
+            <td width="60%" style='font-family: SansSerif;mso-tab-count:3'>|TRADE_CURRENCY|</td>
+        </tr>
+        <tr>
+            <!--calypso>
+                if (|CA_PAY_REC|=="Payment")
+                    inline "
+                       <b><td width='40%' style='font-family: SansSerif;mso-tab-count:1'>Amount to Pay:</td></b>
+                    ";
+                    else inline "
+                        <b><td width='40%' style='font-family: SansSerif;mso-tab-count:1'>Amount to Recive:</td></b>
+                    ";
+            </calypso-->
+            <td width="60%" style='font-family: SansSerif;mso-tab-count:3'>|CA_NET_AMOUNT|</td>
+        </tr>
+    </table>
+
+    <table width="100%" style="margin: 20px;font-size:9.0pt;" CELLSPACING="2">
+        <tr>
+            <td width="40%" style="font-family: SansSerif;mso-tab-count:1"><b style='mso-bidi-font-weight:normal'><span lang=EN-GB style='font-size:9.0pt;mso-ansi-language:EN-GB'>Trade Reference:</span></b></td>
+            <td width="60%" style='font-family: SansSerif;mso-tab-count:3'>|REFERENCED_INCOMING_SWIFT_ID|</td>
+        </tr>
+        <tr>
+            <td width="40%" style="font-family: SansSerif;mso-tab-count:1">Our Trade Id:</td>
+            <td width="60%" style='font-family: SansSerif;mso-tab-count:3'>|REFERENCED_TRADE_ID|</td>
+        </tr>
+        <tr>
+            <td width="40%" style="font-family: SansSerif;mso-tab-count:1">ISIN:</td>
+            <td width="60%" style='font-family: SansSerif;mso-tab-count:3'>|CA_ISIN|  |CA_ISIN_DESC|</td>
+        </tr>
+        <tr>
+            <td width="40%" style="font-family: SansSerif;mso-tab-count:1">Trade Date:</td>
+            <td width="60%" style='font-family: SansSerif;mso-tab-count:3'>|REFERENCED_TRADE_DATE|</td>
+        </tr>
+        <tr>
+            <td width="40%" style="font-family: SansSerif;mso-tab-count:1">Settlement Date:</td>
+            <td width="60%" style='font-family: SansSerif;mso-tab-count:3'>|REFERENCED_SETTLE_DATE|</td>
+        </tr>
+        <tr>
+            <td width="40%" style="font-family: SansSerif;mso-tab-count:1">Quantity:</td>
+            <td width="60%" style='font-family: SansSerif;mso-tab-count:3'>|TRADE_QUANTITY|</td>
+        </tr>
+    </table>
+
+    <p class=MsoNormal><span lang=EN-GB style='font-size:9.0pt;mso-ansi-language:EN-GB'>|CA_SDI_INFO_NOTIFICATION|</span></p>
+
+
+    <p class=MsoNormal><b style='mso-bidi-font-weight:normal'><span lang=EN-GB style='font-size:9.0pt;mso-ansi-language:EN-GB'>Please find below the swift message sent</span></b></p>
+    <p class=MsoNormal><b style='mso-bidi-font-weight:normal'><span lang=EN-GB style='font-size:9.0pt;mso-ansi-language:EN-GB'>We await your reply</span></b></p>
+    <p class=MsoNormal><b style='mso-bidi-font-weight:normal'><span lang=EN-GB style='font-size:9.0pt;mso-ansi-language:EN-GB'>Regards.</span></b></p>
+
+    <br><br>
+    <p class=MsoNormal><span lang=EN-GB style='font-size:9.0pt;mso-ansi-language:EN-GB'>|CA_SWIFT_MESAGE|</span></p>
+
+    <br><br>
+    <p class=MsoNormal align="center"><span lang=EN-GB style='font-size:9.0pt;mso-ansi-language:EN-GB'>|SIGNATURES|</span></p>
+
+</div>
+
+</body>
+
+</html>

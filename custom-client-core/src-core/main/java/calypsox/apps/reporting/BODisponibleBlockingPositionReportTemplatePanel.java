@@ -1,0 +1,4 @@
+package calypsox.apps.reporting;
+
+public class BODisponibleBlockingPositionReportTemplatePanel extends BODisponibleSecurityPositionReportTemplatePanel{
+}

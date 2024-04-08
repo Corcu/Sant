@@ -1,0 +1,13 @@
+#!/bin/sh
+
+CALYPSO_HOME="../.."
+
+for param in "$@" ; do
+    if echo $param | grep -q -E "^-PcalypsoHome=" ; then
+        CALYPSO_HOME=`echo $param | cut -d'=' -f2`
+    fi
+done
+
+GRADLE_HOME="${CALYPSO_HOME}/tools/gradle"; export GRADLE_HOME
+
+"$GRADLE_HOME/bin/gradle" $*

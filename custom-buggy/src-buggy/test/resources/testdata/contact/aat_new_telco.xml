@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<CalypsoUploadDocument>
+    <Contact>
+        <Action>NEW</Action>
+        <Name>AAT_NEW_TELCO</Name>
+        <Role>CounterParty</Role>
+        <SupportedProduct>ALL</SupportedProduct>
+        <ContactType>Swift</ContactType>
+        <ProcessingOrg>BSTE</ProcessingOrg>
+        <LastName></LastName>
+        <FirstName></FirstName>
+        <Title></Title>
+        <Address></Address>
+        <City></City>
+        <State></State>
+        <ZipCode></ZipCode>
+        <Country>SPAIN</Country>
+        <PhoneNumber></PhoneNumber>
+        <Telex></Telex>
+        <Fax></Fax>
+        <Swift></Swift>
+        <Email></Email>
+        <ExternalRef>Test_AAT_NEW_TELCO_Swift_CounterParty_ALL</ExternalRef>
+        <Codes>
+            <Code>
+                <CodeName>SWIFT</CodeName>
+                <CodeValue>NTLCESGHIJXXX</CodeValue>
+            </Code>
+        </Codes>
+        <comments></comments>
+    </Contact>
+</CalypsoUploadDocument>

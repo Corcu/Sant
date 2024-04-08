@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<CalypsoUploadDocument>
+    <CalypsoLegalEntityRelation>
+        <Action>NEW</Action>
+        <ProcessingOrg>BUGGY</ProcessingOrg>
+        <LegalEntity>AAT_NEW_BANK</LegalEntity>
+        <LegalEntityRole>ALL</LegalEntityRole>
+        <OtherLegalEntity></OtherLegalEntity>
+        <OtherLegalEntityRole>ALL</OtherLegalEntityRole>
+    </CalypsoLegalEntityRelation>  
+</CalypsoUploadDocument>

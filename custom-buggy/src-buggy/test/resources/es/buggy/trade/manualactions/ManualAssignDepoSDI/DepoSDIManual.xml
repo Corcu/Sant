@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<CalypsoUploadDocument UploadDate="2018-02-14T11:40:24.51+01:00" Version="1" Source="STAR" ClientCode="BBVA">
+    <CalypsoTrade>
+        <ExternalReference>@EXTERNAL_REFERENCE@</ExternalReference>
+        <InternalReference>@EXTERNAL_REFERENCE@</InternalReference>
+        <TradeId xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+        <Action>NEW</Action>
+        <TradeCounterParty>@CPTY@</TradeCounterParty>
+        <CounterPartyRole>CounterParty</CounterPartyRole>
+        <TradeBook>COL_MAD_DV</TradeBook>
+        <TradeBundleType/>
+        <TradeBundleName/>
+        <TradeCurrency>USD</TradeCurrency>
+        <TradeSettlementCurrency/>
+        <TradeNotional>2.5E7</TradeNotional>
+        <BuySell>BUY</BuySell>
+        <TradeDateTime>@TRADE_DATE@T09:00:00+02:00</TradeDateTime>
+        <TradeSettleDate>@TRADE_DATE@</TradeSettleDate>
+        <StartDate>@START_DATE@+02:00</StartDate>
+        <MaturityDate>@END_DATE@</MaturityDate>
+        <TraderName>SU684465</TraderName>
+        <SalesPerson>NONE</SalesPerson>
+        <Comment/>
+        <TemplateName/>
+        <HolidayCode>
+            <Holiday>USD</Holiday>
+        </HolidayCode>
+        <ProductType>Cash</ProductType>
+        <ProductSubType/>
+        <Product>
+            <Cash>
+                <RateType>FIXED</RateType>
+                <Loan>false</Loan>
+                <Currency>USD</Currency>
+                <Rate>1.92E0</Rate>
+                <SalesMargin>0.0E0</SalesMargin>
+                <RoundingMethod>NEAREST</RoundingMethod>
+                <RateIndex/>
+                <RateIndexSource/>
+                <RateIndexFactor>1.0E0</RateIndexFactor>
+                <Tenor/>
+                <StubPeriod>NONE</StubPeriod>
+                <SpecificFirstDate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+                <SpecificLastDate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+                <FirstReset>NONE</FirstReset>
+                <FirstRate/>
+                <HolidayCode>
+                    <Holiday/>
+                </HolidayCode>
+                <InterestCompounding/>
+                <InterestCompoundingMethod/>
+                <InterestCompoundingFrequency/>
+                <ResetFrequency/>
+                <ResetMethod>Equal</ResetMethod>
+                <ResetPeriod/>
+                <SamplePeriodRule>Match</SamplePeriodRule>
+                <ResetLag/>
+                <ResetOffsetBusDayB>false</ResetOffsetBusDayB>
+                <ResetRoll/>
+                <FloaterType>NONE</FloaterType>
+                <PaymentFrequency/>
+                <PaymentLag>0</PaymentLag>
+                <CouponOffsetBusDayB>true</CouponOffsetBusDayB>
+                <RollDay/>
+                <DateRollConvention>MOD_FOLLOW</DateRollConvention>
+                <DayCountConvention>ACT/360</DayCountConvention>
+                <PrincipalExchange>true</PrincipalExchange>
+                <AccrualPeriodAdjustment/>
+                <PrincipalStructure>
+                    <AmortizationType/>
+                    <BaseAmount>0.0E0</BaseAmount>
+                    <StartDate>1995-05-31</StartDate>
+                    <EndDate>1995-05-31</EndDate>
+                    <Increment>0.0E0</Increment>
+                    <Frequency/>
+                    <Operator/>
+                    <AnnuityRate>0.0E0</AnnuityRate>
+                    <TermAsDate>false</TermAsDate>
+                    <TermDate>1995-05-31</TermDate>
+                    <UseLoanTerm>false</UseLoanTerm>
+                    <LoanTerm/>
+                </PrincipalStructure>
+            </Cash>
+        </Product>
+        <CashFlows>
+            <LockColumns>
+                <Name>Pmt Begin</Name>
+                <Name>Pmt End</Name>
+                <Name>Manual Amt</Name>
+                <Name>Pmt Dt</Name>
+                <Name>Interest Amt</Name>
+                <Name>Currency</Name>
+                <Name>Notional</Name>
+                <Name>Rate</Name>
+            </LockColumns>
+            <CashFlow>
+                <LegType>PAY</LegType>
+                <FlowType>1</FlowType>
+                <Date>1969-01-01</Date>
+                <Column>
+                    <Name>Type</Name>
+                    <Value>PRINCIPAL</Value>
+                </Column>
+            </CashFlow>
+            <CashFlow>
+                <LegType>PAY</LegType>
+                <FlowType>PRINC+INT</FlowType>
+                <Date>@START_DATE@</Date>
+                <Column>
+                    <Name>Type</Name>
+                    <Value>PRINC+INT</Value>
+                </Column>
+                <Column>
+                    <Name>Pmt Begin</Name>
+                    <Value>@START_DATE@</Value>
+                </Column>
+                <Column>
+                    <Name>Pmt End</Name>
+                    <Value>@END_DATE@</Value>
+                </Column>
+                <Column>
+                    <Name>Pmt Dt</Name>
+                    <Value>@END_DATE@</Value>
+                </Column>
+                <Column>
+                    <Name>Interest Amt</Name>
+                    <Value>-37333.33</Value>
+                </Column>
+                <Column>
+                    <Name>Currency</Name>
+                    <Value>USD</Value>
+                </Column>
+                <Column>
+                    <Name>Notional</Name>
+                    <Value>-25000000</Value>
+                </Column>
+                <Column>
+                    <Name>Fixed</Name>
+                    <Value>true</Value>
+                </Column>
+                <Column>
+                    <Name>Rate</Name>
+                    <Value>1.92</Value>
+                </Column>
+                <Column>
+                    <Name>Reset</Name>
+                    <Value>2018-03-14</Value>
+                </Column>
+                <Column>
+                    <Name>Spread</Name>
+                    <Value/>
+                </Column>
+                <Column>
+                    <Name>Index Factor</Name>
+                    <Value/>
+                </Column>
+                <Column>
+                    <Name>LegType</Name>
+                    <Value/>
+                </Column>
+                <Column>
+                    <Name>Manual Amt</Name>
+                    <Value>true</Value>
+                </Column>
+            </CashFlow>
+        </CashFlows>
+        <TradeKeywords>
+        </TradeKeywords>
+    </CalypsoTrade>
+</CalypsoUploadDocument>

@@ -1,0 +1,8 @@
+apply plugin: 'calypso-java-project'
+sourceSets {
+    main {
+        resources {
+           srcDirs = ['src/main/dist']
+        }
+    }
+}

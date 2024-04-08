@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+
+    <!--Disponible Connection-->
+    <bean id="connectionFactoryDisponible" class="com.tibco.tibjms.TibjmsConnectionFactory">
+        <property name="serverUrl" value="@GDISPONIBLE_FI_EMS_URL@"/>
+        <property name="userName" value="@GDISPONIBLE_FI_EMS_USER@"/>
+        <property name="userPassword" value="@GDISPONIBLE_FI_EMS_PASS@"/>
+    </bean>
+
+    <bean id="tibcoDisponible" class="org.apache.camel.component.jms.JmsComponent">
+        <property name="connectionFactory" ref="connectionFactoryDisponible"/>
+    </bean>
+
+    <!--Process MIC response message-->
+    <bean id="gDisponibleResponseProcessor" class="calypsox.tk.processor.fiflow.GDisponibleResponseProcessor"/>
+    <!--END MIC Connection-->
+
+
+    <camelContext id="gDisponibleContext" xmlns="http://camel.apache.org/schema/spring">
+
+        <route id="gdisponible.out" autoStartup="false">
+            <from uri="direct:sendMessage"/>
+            <log message="Disponible message data ${body}"/>
+            <to uri="tibcoDisponible:queue:@GDISPONIBLE_FI_OUTPUT_QUEUE@"/>
+        </route>
+
+        <route id="gdisponible.in" autoStartup="false">
+            <from uri="tibcoDisponible:queue:@GDISPONIBLE_FI_INPUT_QUEUE@"/>
+			<to uri="file:/calypso_interfaces/fiflow/disponible/?fileName=disponibleResponse_${date:now:yyyyMMdd}.log&amp;fileExist=Append"/>
+			<delay asyncDelayed="true">
+				<constant>5000</constant>
+			</delay>
+            <process ref="gDisponibleResponseProcessor"/>
+        </route>
+    </camelContext>
+</beans>

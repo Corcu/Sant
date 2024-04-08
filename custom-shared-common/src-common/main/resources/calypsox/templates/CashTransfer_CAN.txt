@@ -1,0 +1,24 @@
+<cashTransfer>
+    <internalId>|MARGIN_CALL_ID|</internalId>
+    <transactionId>|TRADE_ID|</transactionId>
+    <messageId>|MESSAGE_ID|</messageId>
+    <currency>|TRADE_CURRENCY|</currency>
+    <tradeDate>|TRADE_DATE|</tradeDate>
+    <amount>|TRADE_SETTLEMENT_AMOUNT|</amount>
+    <valueDate>|SETTLE_DATE|</valueDate>
+    <maturityDate>|SETTLE_DATE|</maturityDate>
+    <status>CAN</status>
+    <counterparty>|TRADE_COUNTERPARTY|</counterparty>
+    <owner>|TRADE_PROCESSING_ORGANIZATION|</owner>
+    <portfolio>|TRADE_BOOK_CASH|</portfolio>
+    <user>|USER|</user>
+    <dealTypeCash>|DEAL_TYPE_CASH|</dealTypeCash>
+    <type>|DEAL_TYPE|</type>
+    <tomadaPrestada>|TOMADA_PRESTADA|</tomadaPrestada>
+    <alias>|ALIAS|</alias>
+    <fo_system>|KEYWORD_BO_SYSTEM|</fo_system>
+	<front_id>|KEYWORD_NUM_FRONT_ID|</front_id>
+    <deliveryType>|DELIVERY_TYPE|</deliveryType>
+    <isInterest>|IS_INTEREST|</isInterest>
+    <movementType>|MOVEMENT_TYPE|</movementType>
+</cashTransfer>

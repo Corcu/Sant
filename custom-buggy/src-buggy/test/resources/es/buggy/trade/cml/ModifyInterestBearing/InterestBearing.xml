@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
+<calypso:calypsoDocument xmlns:calypso="http://www.calypso.com/xml">
+    <calypso:calypsoObject xsi:type="calypso:Trade" version="14-0" action=""
+                           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <calypso:identification>
+            <calypso:versionedIdentifier version="0" code="@EXTERNAL_REFERENCE@" codifier="ExternalSystem"/>
+        </calypso:identification>
+        <calypso:auditInfo>
+            <calypso:enteredBy>calypso_user</calypso:enteredBy>
+            <calypso:dateEntered>2018-12-12T12:14:42.437+01:00</calypso:dateEntered>
+        </calypso:auditInfo>
+        <calypso:tradeParty>
+            <calypso:legalEntity>
+                <calypso:type>com.calypso.tk.core.LegalEntityAdapter</calypso:type>
+                <calypso:identifier code="@CPTY@" codifier="convention"/>
+                <calypso:role>CounterParty</calypso:role>
+            </calypso:legalEntity>
+            <calypso:role>CounterParty</calypso:role>
+            <calypso:feeParty>false</calypso:feeParty>
+        </calypso:tradeParty>
+        <calypso:tradeParty>
+            <calypso:book>
+                <calypso:type>com.calypso.tk.core.Book</calypso:type>
+                <calypso:identifier code="COL_MAD_DV" codifier="convention"/>
+                <calypso:calypsoBusinessKey>
+                    <calypso:propertyName>name</calypso:propertyName>
+                    <calypso:propertyValue>COL_MAD_DV</calypso:propertyValue>
+                </calypso:calypsoBusinessKey>
+            </calypso:book>
+            <calypso:role>Book</calypso:role>
+        </calypso:tradeParty>
+        <calypso:internalReference>@EXTERNAL_REFERENCE@</calypso:internalReference>
+        <calypso:externalReference>@EXTERNAL_REFERENCE@</calypso:externalReference>
+        <calypso:tradeAction>@ACTION@</calypso:tradeAction>
+        <calypso:tradeDate>2019-01-01T22:56:21+01:00</calypso:tradeDate>
+        <calypso:tradeCurrency>USD</calypso:tradeCurrency>
+        <calypso:settlementDate>2019-02-04</calypso:settlementDate>
+        <calypso:settlementCurrency>USD</calypso:settlementCurrency>
+        <calypso:product>
+            <calypso:definition xsi:type="calypso:InterestBearing">
+                <calypso:flowType>INTEREST</calypso:flowType>
+                <calypso:principal>100.0</calypso:principal>
+                <calypso:cashCurrency>USD</calypso:cashCurrency>
+                <calypso:collateralMovement>false</calypso:collateralMovement>
+                <calypso:pledgeMovement>false</calypso:pledgeMovement>
+                <calypso:linkedLongId>0</calypso:linkedLongId>
+                <calypso:dapTransfer>false</calypso:dapTransfer>
+                <calypso:dapCashAmount>0.0</calypso:dapCashAmount>
+                <calypso:settlementCurrency>USD</calypso:settlementCurrency>
+                <calypso:startDate>2019-01-01</calypso:startDate>
+                <calypso:endDate>2019-01-31</calypso:endDate>
+                <calypso:paymentDate>2019-02-04</calypso:paymentDate>
+                <calypso:threshold>0.0</calypso:threshold>
+                <calypso:entries>
+                    <calypso:entryType>INTEREST</calypso:entryType>
+                    <calypso:entryDate>2019-01-01</calypso:entryDate>
+                    <calypso:valueDate>2019-02-04</calypso:valueDate>
+                    <calypso:amount>100.0</calypso:amount>
+                    <calypso:adjustment>0.0</calypso:adjustment>
+                    <calypso:rate>1.1</calypso:rate>
+                    <calypso:spread>0.0</calypso:spread>
+                    <calypso:tiered>false</calypso:tiered>
+                </calypso:entries>
+                <calypso:entries>
+                    <calypso:entryType>POSITION</calypso:entryType>
+                    <calypso:entryDate>2019-01-01</calypso:entryDate>
+                    <calypso:valueDate>2019-01-01</calypso:valueDate>
+                    <calypso:amount>1000000.0</calypso:amount>
+                    <calypso:adjustment>0.0</calypso:adjustment>
+                    <calypso:rate>0.0</calypso:rate>
+                    <calypso:spread>0.0</calypso:spread>
+                    <calypso:tiered>false</calypso:tiered>
+                </calypso:entries>
+            </calypso:definition>
+        </calypso:product>
+        <calypso:quantity>1.0</calypso:quantity>
+        <calypso:tradePrice>0.0</calypso:tradePrice>
+        <calypso:accrual>0.0</calypso:accrual>
+        <calypso:marketInfo>0.0</calypso:marketInfo>
+        <calypso:splitBookPrice>0.0</calypso:splitBookPrice>
+        <calypso:splitBasePrice>0.0</calypso:splitBasePrice>
+    </calypso:calypsoObject>
+</calypso:calypsoDocument>

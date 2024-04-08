@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+       <xs:element name="collateralTransfer">
+             <xs:complexType>
+                    <xs:choice>
+                           <xs:element name="cashTransfer" type="cashTransferType"/>
+                           <xs:element name="securityTransfer" type="securityTransferType"/>
+                    </xs:choice>
+             </xs:complexType>
+       </xs:element>
+       <xs:complexType name="securityTransferType">
+             <xs:sequence>
+                    <xs:group ref="collateralTransferGroupComun1"/>
+					<xs:group ref="collateralTransferGroupSecurity"/>
+					<xs:group ref="collateralTransferGroupComun2"/>
+                    <xs:element name="price" type="xs:decimal"/>
+                    <xs:element name="bond" type="xs:string"/>
+                    <xs:element name="triparty" type="tripartyDef"/>
+                    <xs:element name="dealTypeSec" type="dealTypeSecDef"/>
+                    <xs:element name="rehypothecation" type="rehypothecationDef"/>
+                    <xs:element name="accrued" type="xs:integer" fixed="0"/>
+                    <xs:element name="fatherFrontId" type="xs:integer" minOccurs="0"/>
+                    <xs:element name="custodian" type="xs:string" minOccurs="0"/>
+                    <xs:element name="fo_system" type="xs:string" minOccurs="0"/>
+                    <xs:element name="front_id" type="xs:string" minOccurs="0"/>
+                    <xs:element name="deliveryType" type="xs:string" minOccurs="0"/>
+             </xs:sequence>
+       </xs:complexType>
+       <xs:complexType name="cashTransferType">
+             <xs:sequence>
+                    <xs:group ref="collateralTransferGroupComun1"/>
+					<xs:group ref="collateralTransferGroupComun2"/>
+                    <xs:element name="dealTypeCash" type="dealTypeCashDef"/>
+                    <xs:element name="type" type="typeDef"/>
+                    <xs:element name="tomadaPrestada" type="tomadaPrestadaDef"/>
+                    <xs:element name="alias" type="xs:string"/>
+                    <xs:element name="fo_system" type="xs:string" minOccurs="0"/>
+                    <xs:element name="front_id" type="xs:string" minOccurs="0"/>
+                    <xs:element name="deliveryType" type="xs:string" minOccurs="0"/>
+                    <xs:element name="isInterest" type="xs:string" minOccurs="0"/>
+             </xs:sequence>
+       </xs:complexType>
+       <xs:group name="collateralTransferGroupComun1">
+             <xs:sequence>
+                    <xs:element name="internalId" type="xs:integer"/>
+                    <xs:element name="transactionId" type="xs:integer"/>
+                    <xs:element name="messageId" type="xs:integer"/>
+                    <xs:element name="currency" type="xs:string"/>
+                    <xs:element name="tradeDate" type="FormattedDateType"/>
+                    <xs:element name="amount" type="xs:decimal"/>
+             </xs:sequence>
+       </xs:group>
+	   <xs:group name="collateralTransferGroupComun2">
+             <xs:sequence>
+                    <xs:element name="valueDate" type="FormattedDateType"/>
+                    <xs:element name="maturityDate" type="FormattedDateType"/>
+                    <xs:element name="status" type="statusType"/>
+                    <xs:element name="counterparty" type="xs:string"/>
+                    <xs:element name="owner" type="xs:string"/>
+                    <xs:element name="portfolio" type="xs:string"/>
+                    <xs:element name="user" type="xs:string"/>
+             </xs:sequence>
+       </xs:group>
+	   <xs:group name="collateralTransferGroupSecurity">
+             <xs:sequence>
+                    <xs:element name="mainAmount" type="xs:decimal"/>
+             </xs:sequence>
+       </xs:group>
+       <xs:simpleType name="rehypothecationDef">
+             <xs:restriction base="xs:integer">
+                    <xs:pattern value="[0-1]"/>
+             </xs:restriction>
+       </xs:simpleType>
+       <xs:simpleType name="dealTypeSecDef">
+             <xs:restriction base="xs:integer">
+                    <xs:pattern value="[0-3]"/>
+             </xs:restriction>
+       </xs:simpleType>
+       <xs:simpleType name="typeDef">
+             <xs:restriction base="xs:integer">
+                    <xs:pattern value="[0-3]"/>
+             </xs:restriction>
+       </xs:simpleType>
+       <xs:simpleType name="tripartyDef">
+             <xs:restriction base="xs:string">
+                    <xs:pattern value="(Y|N)"/>
+             </xs:restriction>
+       </xs:simpleType>
+       <xs:simpleType name="tomadaPrestadaDef">
+             <xs:restriction base="xs:string">
+                    <xs:pattern value="(T|P)"/>
+             </xs:restriction>
+       </xs:simpleType>
+       <xs:simpleType name="dealTypeCashDef">
+             <xs:restriction base="xs:string">
+                    <xs:pattern value="(D|I)"/>
+             </xs:restriction>
+       </xs:simpleType>
+       <xs:simpleType name="FormattedDateType">
+             <xs:restriction base="xs:string">
+                    <xs:pattern value="(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/\d{4}"/>
+             </xs:restriction>
+       </xs:simpleType>
+       <xs:simpleType name="statusType">
+             <xs:restriction base="xs:string">
+                    <xs:pattern value="(ALT|CAN)"/>
+             </xs:restriction>
+       </xs:simpleType>
+</xs:schema>

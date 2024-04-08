@@ -1,0 +1,306 @@
+<html 
+	xmlns:concordion="http://www.concordion.org/2007/concordion" 
+	xmlns:ext="urn:concordion-extensions:2010">
+
+	<head>
+		<title>Asignación Manual de SDIs a Nivel de Transfer</title>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+		<script>
+	            function showMessage(elementId) {
+		            var x = document.getElementById(elementId);
+		            if (x.style.display === "none") {
+		                x.style.display = "block";
+		            } else {
+		                x.style.display = "none";
+		            }
+	            }
+	    </script>
+	</head>
+	
+	<body>
+		<h1>Asignación Manual de SDIs a Nivel de Transfer</h1>
+	
+		<h2>Descripción</h2>
+		
+		<p>
+			En el caso en el que se necesite asignar una nueva SDI o Netting type al transfer. 
+			Un cambio en un transfer (cambio en el método de liquidación, en la SDI, en el beneficiario…) hace 
+			que este transfer se cancele y se genere uno nuevo. Por tanto, no existe “UNASSIGN”, sino que se 
+			hace un ASSIGN para corregir un ASSIGN. Si se vuelve a hacer, el transfer pasa a estado CANCELED 
+			y se crea uno nuevo en estado CREATED desde la Task Station.
+		</p>
+
+		<h2>Datos de Referencia</h2>
+
+		<p>
+			Insertamos una operación con SDIs válidas y proceso de PREMATCH. Desde el estado PREMATCH, creamos una nueva SDI 
+			valida para esta liquidación y hacemos una asignacion de SDIs al Transfer con la acción ASSIGN. Realizamos el proceso de validación 4-eyes y
+			Autorizamos la asignacion de SDIs mediante la acción AUTHORIZE_MAN.
+			Esperamos que se haya generado una nueva liquidacion con nuetsra SDI asignada manualmente y que entre en el proceso normal de liquidación.
+		</p>	
+
+		<p>
+			Utilizando el template 
+			<span concordion:set="#template">FXSpot.xml</span> 
+			con la Contrapartida 
+			<span concordion:execute="setProperty('CPTY', #TEXT)">AAT_BANK</span>
+			aplicando la acción <span concordion:execute="setProperty('ACTION', #TEXT)">NEW</span>
+		</p>
+		<p>
+			La External Reference de la operación será 
+			<span concordion:echo="#extRef=generateExternalRef()"> </span>  
+			<span concordion:execute="setProperty('EXTERNAL_REFERENCE', #extRef)"> </span>
+		</p>
+
+		<h2>Proceso de prueba</h2>
+		
+		<p>
+            Insertamos la operación. 
+			<span concordion:execute="#ack=importCDUF(#template)"> </span> 
+	   	</p>
+<button onclick="showMessage('ack')">Mostrar Ack completo</button>	
+<pre concordion:echo="#ack" id="ack" style="display:none"> </pre>	
+		
+		<p>
+			<span concordion:execute="#trade=getTrade(#ack.tradeId)"> </span>
+			La operación insertada (<span concordion:echo="#trade"> </span>) es similar a:
+		</p>
+		<p>
+			<span style="visibility: hidden;" concordion:set="#img">FXSpot.png</span>
+			<span ext:embed="getImage(#img)"> </span>			
+		</p>
+			
+		<p>
+    		Esperamos hasta que Calypso genera los Transfers de la operación comprobando que el 
+    		<span concordion:set="#engine">TransferEngine</span> no tenga eventos pendientes
+    		(<span concordion:echo="waitForEngine(#engine)"> </span> eventos pendientes).		
+		</p>
+		
+		<p>
+			Las liquidaciones generadas para la operación se detienen por prematch:
+		</p>
+		
+		<table concordion:verifyRows="#xfer : getNettedTransfers(#trade)">
+			<tr>
+				<th concordion:echo="#xfer.id">Id</th>
+				<th concordion:assertEquals="#xfer.status">Status</th>
+				<th concordion:assertEquals="#xfer.transferType">Tipo</th>
+				<th concordion:assertEquals="#xfer.eventType">Dirección</th>
+				<th concordion:assertEquals="#xfer.settlementAmount">Cantidad</th>
+				<th concordion:assertEquals="#xfer.valueDate">Fecha valor</th>
+				<th concordion:assertEquals="#xfer.internalSettleDelivery.reference">Internal SDI</th>
+				<th concordion:assertEquals="#xfer.externalSettleDelivery.reference">External SDI</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td>VERIFIED</td>
+				<td>PRINCIPAL</td>
+				<td>PAYMENT</td>
+				<td>4,261,200.00 USD</td>
+				<td>08/05/2026</td>
+				<td>AAT_BUGGY_PO_SDI</td>
+				<td>Test_AAT_BANK_SWIFT_ANY</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>VERIFIED</td>
+				<td>PRINCIPAL</td>
+				<td>RECEIPT</td>
+				<td>4,261,200.00 EUR</td>
+				<td>08/05/2026</td>
+				<td>AAT_BUGGY_PO_SDI</td>
+				<td>Test_AAT_BANK_SWIFT_ANY</td>
+			</tr>
+			
+		</table>
+		
+
+		
+		<h3>Creamos la SDI Necesaria para asignación</h3>
+		
+		<p>
+			Cargamos la SDI que está definida en el fichero 
+			<span concordion:set="#sdiTemplate">AAT_BANK_MANUAL_SDI.xml</span>
+			y externalRef <span concordion:set="#sdiRef">AAT_BANK_MANUAL_SDI</span>
+			<span concordion:execute="setProperty('REFERENCE', #sdiRef)"> </span>. 
+			<span concordion:execute="#sdiAck=importCDUF(#sdiTemplate)"> </span> 
+	   	</p>
+<button onclick="showMessage('sdiAck')">Mostrar Ack completo</button>	
+<pre concordion:echo="#sdiAck" id="sdiAck" style="display:none"> </pre>	
+
+		<table concordion:execute="#sdiRec=getSdi(#sdiRef)">
+			<tr>
+				<th concordion:echo="#sdiRec.id">SDI id</th>
+				<th concordion:assertEquals="#sdiRec.description">Description</th>
+				<th concordion:assertEquals="#sdiRec.products">Propducts</th>
+				<th concordion:assertEquals="#sdiRec.beneficiaryLE">Beneficiary</th>
+				<th concordion:assertEquals="#sdiRec.role">Role</th>
+                <th concordion:assertEquals="#sdiRec.currencies">Currencies</th>  
+			</tr>
+			<tr>
+				<td></td>
+				<td>SWIFT/AAT_AGENT/36141469</td>
+				<td>ANY</td>
+				<td>AAT_BANK</td>
+				<td>CounterParty</td>
+				<td>USD</td>
+			</tr>
+		</table>
+
+		<p>
+			Asignamos la SDI creada anteriormente a la Liquidación de tipo
+				<span concordion:set="#transferType">PRINCIPAL</span>
+				con eventType <span concordion:set="#eventType">PAYMENT</span> de 
+				<span concordion:set="#amount">4261200.0</span> 
+				<span concordion:set="#ccy">USD</span>. 
+				<span concordion:execute="#transfer=getNettedTransfer(#trade, #amount, #ccy, #eventType, 'VERIFIED')"> </span>
+				<span concordion:echo="#transfer"> </span>
+				<span concordion:execute="#tr=createTransferRule(#transferType, 'PAY')" > </span>,
+				<span concordion:execute="#sdiPay=getSdi('AAT_BUGGY_PO_SDI')"> </span>  
+				y aplicamos la acción <span concordion:set="#action">ASSIGN</span>.
+				<span concordion:execute="#trade.assignSdisOnTransfer(#sdiPay, #sdiRec, #tr, #action, 'calypso_user')"> </span>.			
+
+		</p>
+		
+		<p>
+			Ahora debe haberse cancelado la tranferencia anterior y se debe haber creado una nueva en estado CREATED
+			<span concordion:execute="#transfer1=getNettedTransfer(#trade, #amount, #ccy, #eventType, 'CREATED')"> </span>			
+			(<span concordion:assertTrue="assertNotNull(#transfer1)">OK</span>
+			<span concordion:echo="#transfer1"> </span>)
+		</p>
+			
+		<p>
+			Se comprueba adicionalmente que la SDI de Contrapartida asignada al Nuevo Transfer es la que se ha creado 
+			durante la prueba, en la columna "External SDI Id" de la tabla:
+		</p>
+		<table concordion:verifyRows="#xfer : getNettedTransfers(#trade)">
+			<tr>
+				<th concordion:echo="#xfer.id">Id</th>
+				<th concordion:assertEquals="#xfer.status">Status</th>
+				<th concordion:assertEquals="#xfer.transferType">Tipo</th>
+				<th concordion:assertEquals="#xfer.eventType">Dirección</th>
+				<th concordion:assertEquals="#xfer.settlementAmount">Cantidad</th>
+				<th concordion:assertEquals="#xfer.valueDate">Fecha valor</th>
+				<th concordion:assertEquals="#xfer.internalSettleDelivery.reference">Internal SDI reference</th>
+				<th concordion:assertEquals="#xfer.externalSettleDelivery.reference">External SDI reference</th>
+			</tr>
+			
+			<tr>
+				<td></td>
+				<td>CANCELED</td>
+				<td>PRINCIPAL</td>
+				<td>PAYMENT</td>
+				<td>4,261,200.00 USD</td>
+				<td>08/05/2026</td>
+				<td>AAT_BUGGY_PO_SDI</td>
+				<td>Test_AAT_BANK_SWIFT_ANY</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>CREATED</td>
+				<td>PRINCIPAL</td>
+				<td>PAYMENT</td>
+				<td>4,261,200.00 USD</td>
+				<td>08/05/2026</td>
+				<td>AAT_BUGGY_PO_SDI</td>
+				<td>AAT_BANK_MANUAL_SDI</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>VERIFIED</td>
+				<td>PRINCIPAL</td>
+				<td>RECEIPT</td>
+				<td>4,261,200.00 EUR</td>
+				<td>08/05/2026</td>
+				<td>AAT_BUGGY_PO_SDI</td>
+				<td>Test_AAT_BANK_SWIFT_ANY</td>
+			</tr>
+		</table>
+
+		<p>
+			Comprobamos que existe una tarea de tipo <span concordion:set="#taskType">CREATED_PAYMENT</span>			
+			asociada a la Liquidación en estado CREATED 
+		</p>	
+		
+		<table concordion:verifyRows="#task : getTasksByEventTypes(#transfer1, {#taskType}, false)">
+			<tr>
+				<th concordion:echo="#task.id">Task Id</th>
+				<th concordion:echo="#task.trade">Trade</th>
+				<th concordion:assertEquals="#task.eventType">Event Type</th>
+				<th concordion:assertEquals="#task.comment">Task comment</th>
+				<th concordion:assertEquals="#task.status">Task Status</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+				<td>CREATED_PAYMENT</td>
+				<td>Filter 4-Eyes rejects Transfer</td>
+				<td>NEW</td>
+			</tr>
+		</table>
+	
+		
+		<h2>Resultado</h2>
+		<p>
+			Aplicamos la accion  <span concordion:set="#action">RELEASE</span>
+			al transfer (<span concordion:echo="#transfer1"> </span>) 
+			<span concordion:execute="#transfer1.applyAction(#action)"> </span>.
+			Comprobamos que el transfer ha viajado al estado VERIFIED.	
+			<span concordion:execute="#transferF=getNettedTransfer(#trade, #amount, #ccy, #eventType, 'VERIFIED')"> </span>			
+			(<span concordion:assertTrue="assertNotNull(#transferF)">OK</span>
+			<span concordion:echo="#transferF"> </span>)
+			.
+		</p>
+		
+		<table concordion:verifyRows="#xfer : getNettedTransfers(#trade)">
+			<tr>
+				<th concordion:echo="#xfer.id">Id</th>
+				<th concordion:assertEquals="#xfer.status">Status</th>
+				<th concordion:assertEquals="#xfer.transferType">Tipo</th>
+				<th concordion:assertEquals="#xfer.eventType">Dirección</th>
+				<th concordion:assertEquals="#xfer.settlementAmount">Cantidad</th>
+				<th concordion:assertEquals="#xfer.valueDate">Fecha valor</th>
+				<th concordion:assertEquals="#xfer.internalSettleDelivery.reference">Internal SDI reference</th>
+				<th concordion:assertEquals="#xfer.externalSettleDelivery.reference">External SDI reference</th>
+			</tr>
+			
+			<tr>
+				<td></td>
+				<td>CANCELED</td>
+				<td>PRINCIPAL</td>
+				<td>PAYMENT</td>
+				<td>4,261,200.00 USD</td>
+				<td>08/05/2026</td>
+				<td>AAT_BUGGY_PO_SDI</td>
+				<td>Test_AAT_BANK_SWIFT_ANY</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>VERIFIED</td>
+				<td>PRINCIPAL</td>
+				<td>PAYMENT</td>
+				<td>4,261,200.00 USD</td>
+				<td>08/05/2026</td>
+				<td>AAT_BUGGY_PO_SDI</td>
+				<td>AAT_BANK_MANUAL_SDI</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>VERIFIED</td>
+				<td>PRINCIPAL</td>
+				<td>RECEIPT</td>
+				<td>4,261,200.00 EUR</td>
+				<td>08/05/2026</td>
+				<td>AAT_BUGGY_PO_SDI</td>
+				<td>Test_AAT_BANK_SWIFT_ANY</td>
+			</tr>
+		</table>
+
+		<h3>Limpieza de datos de pruebas</h3>
+		<p>
+			<span concordion:assertTrue="#sdiRec.remove()">Borramos la SDI</span> creada anteriormente con external_Ref 
+			<span concordion:echo="#sdiRec.reference"> </span>.
+		</p>	
+	</body>
+
+</html>

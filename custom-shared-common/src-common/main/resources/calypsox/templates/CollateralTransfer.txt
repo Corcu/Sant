@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<collateralTransfer>
+	<!--calypso>
+		if (|IS_MARGINCALL_SECURITY| == "true"){
+			if (|IS_NEW_TRADE| == "true"){
+				include "SecurityTransfer_ALT.txt";
+			} else {
+				include "SecurityTransfer_CAN.txt";
+			} 
+		} else {
+			if (|IS_NEW_TRADE| == "true"){
+				include "CashTransfer_ALT.txt";
+			} else {
+				include "CashTransfer_CAN.txt";
+			}
+		}
+	</calypso-->
+</collateralTransfer>
